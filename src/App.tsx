@@ -12,6 +12,7 @@ import { Onboarding } from "@/pages/Onboarding";
 import { Dashboard } from "@/pages/Dashboard";
 import { Team } from "@/pages/Team";
 import { Account } from "@/pages/Account";
+import { Organization } from "@/pages/Organization";
 import { Forbidden } from "@/pages/Forbidden";
 import { NotFound } from "@/pages/NotFound";
 import { Placeholder } from "@/pages/Placeholder";
@@ -40,7 +41,7 @@ export default function App() {
         <Route path="/" element={<RequireAuth><RequireOnboarding><Dashboard /></RequireOnboarding></RequireAuth>} />
         <Route path="/team" element={<RequireAuth><RequireOnboarding><Team /></RequireOnboarding></RequireAuth>} />
         <Route path="/account" element={<RequireAuth><RequireOnboarding><Account /></RequireOnboarding></RequireAuth>} />
-        <Route path="/organization" element={<RequireAuth><RequireOnboarding><Authed title="Organization" /></RequireOnboarding></RequireAuth>} />
+        <Route path="/organization" element={<RequireAuth><RequireOnboarding><Organization /></RequireOnboarding></RequireAuth>} />
         <Route path="/audit" element={<RequireAuth><RequireOnboarding><Authed title="Audit" /></RequireOnboarding></RequireAuth>} />
         <Route path="/notifications" element={<RequireAuth><RequireOnboarding><Authed title="Notifications" /></RequireOnboarding></RequireAuth>} />
 
