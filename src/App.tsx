@@ -15,6 +15,7 @@ import { Account } from "@/pages/Account";
 import { Organization } from "@/pages/Organization";
 import { Forbidden } from "@/pages/Forbidden";
 import { NotFound } from "@/pages/NotFound";
+import { Audit } from "@/pages/Audit";
 import { Placeholder } from "@/pages/Placeholder";
 import { AppShell } from "@/components/layout/AppShell";
 
@@ -42,7 +43,7 @@ export default function App() {
         <Route path="/team" element={<RequireAuth><RequireOnboarding><Team /></RequireOnboarding></RequireAuth>} />
         <Route path="/account" element={<RequireAuth><RequireOnboarding><Account /></RequireOnboarding></RequireAuth>} />
         <Route path="/organization" element={<RequireAuth><RequireOnboarding><Organization /></RequireOnboarding></RequireAuth>} />
-        <Route path="/audit" element={<RequireAuth><RequireOnboarding><Authed title="Audit" /></RequireOnboarding></RequireAuth>} />
+        <Route path="/audit" element={<RequireAuth><RequireOnboarding><Audit /></RequireOnboarding></RequireAuth>} />
         <Route path="/notifications" element={<RequireAuth><RequireOnboarding><Authed title="Notifications" /></RequireOnboarding></RequireAuth>} />
 
         <Route path="/403" element={<Forbidden />} />
