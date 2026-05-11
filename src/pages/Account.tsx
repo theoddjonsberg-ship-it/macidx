@@ -12,6 +12,7 @@ import {
 } from "@/lib/validation/account";
 import { AppShell } from "@/components/layout/AppShell";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { AvatarUpload } from "@/components/account/AvatarUpload";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -44,13 +45,8 @@ function ProfileCard() {
     formState: { errors, isSubmitting },
   } = useForm<ProfileFormInput>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues: { display_name: "", avatar_url: "" },
-    values: profile
-      ? {
-          display_name: profile.display_name ?? "",
-          avatar_url: profile.avatar_url ?? "",
-        }
-      : undefined,
+    defaultValues: { display_name: "" },
+    values: profile ? { display_name: profile.display_name ?? "" } : undefined,
   });
 
   const onSubmit = async (values: ProfileFormInput) => {
@@ -59,10 +55,7 @@ function ProfileCard() {
     setSaved(false);
     const { error } = await supabase
       .from("profiles")
-      .update({
-        display_name: values.display_name,
-        avatar_url: values.avatar_url || null,
-      })
+      .update({ display_name: values.display_name })
       .eq("user_id", user.id);
     if (error) {
       setSubmitError(error.message);
@@ -77,7 +70,7 @@ function ProfileCard() {
     return (
       <Card>
         <Skeleton className="h-4 w-16 mb-3" />
-        <Skeleton className="h-10 w-full mb-3" />
+        <Skeleton className="h-14 w-full mb-4" />
         <Skeleton className="h-10 w-full" />
       </Card>
     );
@@ -88,7 +81,12 @@ function ProfileCard() {
       <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
         Profil
       </p>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-3" noValidate>
+
+      <div className="mt-4">
+        <AvatarUpload />
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-6" noValidate>
         <div className="space-y-2">
           <Label htmlFor="display_name">Namn</Label>
           <Input
@@ -98,18 +96,6 @@ function ProfileCard() {
             aria-invalid={!!errors.display_name}
           />
           <FormError>{errors.display_name?.message}</FormError>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="avatar_url">Avatar URL (valfri)</Label>
-          <Input
-            id="avatar_url"
-            type="url"
-            placeholder="https://..."
-            {...register("avatar_url")}
-            aria-invalid={!!errors.avatar_url}
-          />
-          <FormError>{errors.avatar_url?.message}</FormError>
         </div>
 
         <FormError>{submitError}</FormError>
