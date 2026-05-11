@@ -2,16 +2,6 @@ import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useProfile } from "@/hooks/useProfile";
 import { useActiveOrg } from "@/hooks/useActiveOrg";
-import type { ExperienceRole } from "@/types/database";
-
-const ROLE_COPY: Record<ExperienceRole | "default", string> = {
-  machine_owner: "Få översikt över din maskinpark.",
-  service_tech: "Hantera servicearbete och loggar.",
-  oem: "Följ dina tillverkade enheter i marknaden.",
-  bank_finance: "Verifiera tillgångar du finansierar.",
-  insurance: "Verifiera tillgångar du försäkrar.",
-  default: "Maskinregistret kommer i v0.2.",
-};
 
 export function WelcomeCard() {
   const { data: profile, isLoading: pLoading } = useProfile();
@@ -20,29 +10,39 @@ export function WelcomeCard() {
   if (pLoading || oLoading) {
     return (
       <Card>
-        <Skeleton className="h-4 w-24 mb-3" />
-        <Skeleton className="h-6 w-40 mb-2" />
-        <Skeleton className="h-4 w-56" />
+        <Skeleton className="h-4 w-32 mb-3" />
+        <Skeleton className="h-7 w-56 mb-2" />
+        <Skeleton className="h-4 w-40 mb-4" />
+        <Skeleton className="h-4 w-full" />
       </Card>
     );
   }
 
-  const copy = profile?.experience_role
-    ? ROLE_COPY[profile.experience_role]
-    : ROLE_COPY.default;
+  const name = profile?.display_name?.split(" ")[0] ?? "användare";
 
   return (
-    <Card>
-      <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
-        Välkommen
+    <Card className="h-full">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
+            Översikt
+          </p>
+          <h2 className="text-xl font-semibold mt-1 text-foreground truncate">
+            Välkommen tillbaka, {name}
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1 truncate">
+            {org?.name ?? "Ingen aktiv organisation"}
+          </p>
+        </div>
+        {org && (
+          <span className="inline-flex items-center rounded-chip bg-primary/10 text-primary px-2 py-0.5 text-xs font-medium font-mono uppercase tracking-wide shrink-0">
+            Aktiv
+          </span>
+        )}
+      </div>
+      <p className="text-sm text-muted-foreground mt-4">
+        Du har en aktiv Machindex-grund. I v0.1 kan du hantera team, sätta rollbaserad behörighet och följa organisationsaktivitet. Maskinregistret öppnas i v0.2.
       </p>
-      <h2 className="text-lg font-semibold mt-1">
-        {profile?.display_name || "Användare"}
-      </h2>
-      <p className="text-sm text-muted-foreground mt-1">
-        {org ? `Aktiv organisation: ${org.name}` : "Ingen organisation"}
-      </p>
-      <p className="text-sm mt-3">{copy}</p>
     </Card>
   );
 }
