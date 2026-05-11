@@ -11,3 +11,6 @@ dist-ssr
 .idea
 supabase/.temp/
 supabase/.branches/
+
+# TypeScript build cache
+*.tsbuildinfo
