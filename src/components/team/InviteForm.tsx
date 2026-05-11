@@ -43,7 +43,7 @@ export function InviteForm({ orgId, onClose }: Props) {
       role: values.role,
       token_hash,
       invited_by: user.id,
-    } as never);
+    });
     if (error) {
       setSubmitError(error.message);
       return;

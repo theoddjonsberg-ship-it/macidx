@@ -22,6 +22,79 @@ export type AppRole =
 
 export type Language = "sv" | "en";
 
+export type NotificationType =
+  | "team_invite_accepted"
+  | "password_changed"
+  | "welcome";
+
+export interface Database {
+  public: {
+    Tables: {
+      profiles: {
+        Row: { id: string; user_id: string; display_name: string | null; avatar_url: string | null; experience_role: ExperienceRole | null; language: Language; onboarding_completed_at: string | null; created_at: string; updated_at: string };
+        Insert: { id?: string; user_id: string; display_name?: string | null; avatar_url?: string | null; experience_role?: ExperienceRole | null; language?: Language; onboarding_completed_at?: string | null; created_at?: string; updated_at?: string };
+        Update: { id?: string; user_id?: string; display_name?: string | null; avatar_url?: string | null; experience_role?: ExperienceRole | null; language?: Language; onboarding_completed_at?: string | null; created_at?: string; updated_at?: string };
+        Relationships: [];
+      };
+      organizations: {
+        Row: { id: string; name: string; org_number: string | null; country: string | null; logo_url: string | null; timezone: string; created_at: string; updated_at: string };
+        Insert: { id?: string; name: string; org_number?: string | null; country?: string | null; logo_url?: string | null; timezone?: string; created_at?: string; updated_at?: string };
+        Update: { id?: string; name?: string; org_number?: string | null; country?: string | null; logo_url?: string | null; timezone?: string; created_at?: string; updated_at?: string };
+        Relationships: [];
+      };
+      organization_members: {
+        Row: { id: string; org_id: string; user_id: string; joined_at: string };
+        Insert: { id?: string; org_id: string; user_id: string; joined_at?: string };
+        Update: { id?: string; org_id?: string; user_id?: string; joined_at?: string };
+        Relationships: [];
+      };
+      user_roles: {
+        Row: { id: string; user_id: string; org_id: string | null; role: AppRole; created_at: string };
+        Insert: { id?: string; user_id: string; org_id: string | null; role: AppRole; created_at?: string };
+        Update: { id?: string; user_id?: string; org_id?: string | null; role?: AppRole; created_at?: string };
+        Relationships: [];
+      };
+      org_invitations: {
+        Row: { id: string; org_id: string; email: string; role: AppRole; token_hash: string; invited_by: string; expires_at: string; consumed_at: string | null; consumed_by: string | null; created_at: string };
+        Insert: { id?: string; org_id: string; email: string; role: AppRole; token_hash: string; invited_by: string; expires_at?: string; consumed_at?: string | null; consumed_by?: string | null; created_at?: string };
+        Update: { id?: string; org_id?: string; email?: string; role?: AppRole; token_hash?: string; invited_by?: string; expires_at?: string; consumed_at?: string | null; consumed_by?: string | null; created_at?: string };
+        Relationships: [];
+      };
+      audit_log: {
+        Row: { id: string; org_id: string | null; actor_user_id: string | null; action: string; entity_type: string; entity_id: string; metadata: Json; occurred_at: string };
+        Insert: { id?: string; org_id?: string | null; actor_user_id?: string | null; action: string; entity_type: string; entity_id: string; metadata?: Json; occurred_at?: string };
+        Update: { id?: string; org_id?: string | null; actor_user_id?: string | null; action?: string; entity_type?: string; entity_id?: string; metadata?: Json; occurred_at?: string };
+        Relationships: [];
+      };
+      notifications: {
+        Row: { id: string; user_id: string; org_id: string | null; type: NotificationType; title: string; body: string; link: string | null; read_at: string | null; created_at: string };
+        Insert: { id?: string; user_id: string; org_id?: string | null; type: NotificationType; title: string; body: string; link?: string | null; read_at?: string | null; created_at?: string };
+        Update: { id?: string; user_id?: string; org_id?: string | null; type?: NotificationType; title?: string; body?: string; link?: string | null; read_at?: string | null; created_at?: string };
+        Relationships: [];
+      };
+      login_attempts: {
+        Row: { id: string; email_hash: string; ip_hash: string; success: boolean; attempted_at: string };
+        Insert: { id?: string; email_hash: string; ip_hash: string; success: boolean; attempted_at?: string };
+        Update: { id?: string; email_hash?: string; ip_hash?: string; success?: boolean; attempted_at?: string };
+        Relationships: [];
+      };
+      auth_events: {
+        Row: { id: string; user_id: string | null; event_type: string; ip_hash: string | null; severity: string; metadata: Json; occurred_at: string };
+        Insert: { id?: string; user_id?: string | null; event_type: string; ip_hash?: string | null; severity?: string; metadata?: Json; occurred_at?: string };
+        Update: { id?: string; user_id?: string | null; event_type?: string; ip_hash?: string | null; severity?: string; metadata?: Json; occurred_at?: string };
+        Relationships: [];
+      };
+    };
+    Views: { [_ in never]: never };
+    Functions: {
+      accept_invitation: { Args: { _token: string }; Returns: string };
+      record_login_attempt: { Args: { _email: string; _ip: string; _success: boolean }; Returns: undefined };
+    };
+    Enums: { app_role: AppRole };
+    CompositeTypes: { [_ in never]: never };
+  };
+}
+
 export interface ProfileRow {
   id: string;
   user_id: string;
@@ -71,11 +144,6 @@ export interface AuditLogRow {
   occurred_at: string;
 }
 
-export type NotificationType =
-  | "team_invite_accepted"
-  | "password_changed"
-  | "welcome";
-
 export interface NotificationRow {
   id: string;
   user_id: string;
@@ -86,55 +154,4 @@ export interface NotificationRow {
   link: string | null;
   read_at: string | null;
   created_at: string;
-}
-
-export interface Database {
-  public: {
-    Tables: {
-      profiles: {
-        Row: ProfileRow;
-        Insert: Partial<ProfileRow> & { user_id: string };
-        Update: Partial<Omit<ProfileRow, "id" | "user_id" | "created_at">>;
-      };
-      organizations: {
-        Row: OrganizationRow;
-        Insert: { name: string; org_number?: string | null; country?: string | null };
-        Update: Partial<Omit<OrganizationRow, "id" | "created_at">>;
-      };
-      organization_members: {
-        Row: OrganizationMemberRow;
-        Insert: { org_id: string; user_id: string };
-        Update: never;
-      };
-      user_roles: {
-        Row: UserRoleRow;
-        Insert: { user_id: string; org_id: string | null; role: AppRole };
-        Update: { role?: AppRole };
-      };
-      audit_log: {
-        Row: AuditLogRow;
-        Insert: never;
-        Update: never;
-      };
-      notifications: {
-        Row: NotificationRow;
-        Insert: never;
-        Update: { read_at?: string | null };
-      };
-    };
-    Views: Record<string, never>;
-    Functions: {
-      accept_invitation: {
-        Args: { _token: string };
-        Returns: string;
-      };
-      record_login_attempt: {
-        Args: { _email: string; _ip: string; _success: boolean };
-        Returns: undefined;
-      };
-    };
-    Enums: {
-      app_role: AppRole;
-    };
-  };
 }
