@@ -19,7 +19,7 @@ export function OnboardingLayout({
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <header className="px-4 pt-6">
-        <p className="font-condensed text-xs tracking-widest uppercase text-muted-foreground">
+        <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
           MachIndex · Onboarding
         </p>
         <ol className="mt-3 flex gap-1.5" aria-label={`Steg ${step} av ${total}`}>
@@ -43,7 +43,7 @@ export function OnboardingLayout({
               <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
             )}
           </div>
-          <div className="bg-surface-raised border border-border rounded-xl p-6 shadow-soft-raised">
+          <div className="bg-card text-card-foreground border border-border rounded-surface p-6">
             {children}
           </div>
         </div>

@@ -1,58 +1,130 @@
+/*
+ * MachIndex Core — Design Tokens v0.1
+ * Primary: Green #4aba5a (HSL 128.6 44.8% 51%)
+ * NO shadows, glow, blur, gradients. Depth via border + surface contrast.
+ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --surface-base: 242 244 246;
-    --surface-raised: 255 255 255;
-    --surface-track: 246 247 249;
-    --surface-inner: 250 250 250;
-    --foreground: 10 13 20;
-    --muted-foreground: 92 100 112;
-    --border: 10 13 20;
-    --primary: 74 186 90;
-    --primary-foreground: 255 255 255;
-    --destructive: 220 38 38;
-    --destructive-foreground: 255 255 255;
-    --disabled-opacity: 0.5;
-    --focus-ring: 0 0 0 2px rgb(var(--primary) / 0.3);
+    --background: 210 18.2% 95.7%;
+    --surface-raised: 0 0% 100%;
+    --surface-track: 220 20% 97.1%;
+    --surface-inner: 0 0% 98%;
+    --foreground: 60 3% 6.5%;
+    --card: 0 0% 100%;
+    --card-foreground: 60 3% 6.5%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 60 3% 6.5%;
+    --primary: 128.6 44.8% 51%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 20% 97.1%;
+    --secondary-foreground: 60 3% 6.5%;
+    --muted: 220 20% 97.1%;
+    --muted-foreground: 215.7 15% 51.6%;
+    --accent: 138.5 76.5% 96.7%;
+    --accent-foreground: 60 3% 6.5%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --trust: 128.6 44.8% 51%;
+    --warning: 37.7 92.1% 50.2%;
+    --info: 217.2 91.2% 59.8%;
+    --border: 222.9 13.7% 90%;
+    --input: 222.9 13.7% 90%;
+    --ring: 128.6 44.8% 51%;
+    --radius-coin: 0.5rem;
+    --radius-chip: 0.5rem;
+    --radius-control: 0.5rem;
+    --radius-surface: 0.75rem;
+    --radius: 0.5rem;
+    --chart-1: 128.6 44.8% 51%;
+    --chart-2: 215.7 15% 51.6%;
+    --chart-3: 222.9 13.7% 75%;
+    --chart-4: 0 0% 85%;
+    --chart-5: 0 0% 92%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 60 3% 6.5%;
+    --sidebar-primary: 128.6 44.8% 51%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 138.5 76.5% 96.7%;
+    --sidebar-accent-foreground: 60 3% 6.5%;
+    --sidebar-border: 222.9 13.7% 90%;
+    --sidebar-ring: 128.6 44.8% 51%;
   }
 
   .dark {
-    --surface-base: 5 7 9;
-    --surface-raised: 15 18 25;
-    --surface-track: 10 13 20;
-    --surface-inner: 21 24 32;
-    --foreground: 242 244 246;
-    --muted-foreground: 138 143 153;
-    --border: 255 255 255;
-    --primary: 74 186 90;
-    --primary-foreground: 5 7 9;
-    --destructive: 248 113 113;
-    --destructive-foreground: 5 7 9;
+    --background: 210 28.6% 2.7%;
+    --surface-raised: 222 25% 7.8%;
+    --surface-track: 222 33.3% 5.9%;
+    --surface-inner: 223.6 20.8% 10.4%;
+    --foreground: 222.9 13.7% 90%;
+    --card: 225 18.2% 8.6%;
+    --card-foreground: 222.9 13.7% 90%;
+    --popover: 223.6 17.5% 12.4%;
+    --popover-foreground: 222.9 13.7% 90%;
+    --primary: 128.6 44.8% 51%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 223.6 20.8% 10.4%;
+    --secondary-foreground: 222.9 13.7% 90%;
+    --muted: 223.6 20.8% 10.4%;
+    --muted-foreground: 224 6.9% 57.5%;
+    --accent: 143.8 61.2% 20.2%;
+    --accent-foreground: 222.9 13.7% 90%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --trust: 128.6 44.8% 51%;
+    --warning: 37.7 92.1% 50.2%;
+    --info: 217.2 91.2% 59.8%;
+    --border: 223.6 11.6% 18.6%;
+    --input: 223.6 11.6% 18.6%;
+    --ring: 128.6 44.8% 51%;
+    --radius-coin: 0.5rem;
+    --radius-chip: 0.5rem;
+    --radius-control: 0.5rem;
+    --radius-surface: 0.75rem;
+    --radius: 0.5rem;
+    --chart-1: 128.6 44.8% 51%;
+    --chart-2: 224 6.9% 57.5%;
+    --chart-3: 223.6 11.6% 35%;
+    --chart-4: 223.6 11.6% 25%;
+    --chart-5: 223.6 11.6% 18.6%;
+    --sidebar-background: 222 25% 7.8%;
+    --sidebar-foreground: 222.9 13.7% 90%;
+    --sidebar-primary: 128.6 44.8% 51%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 143.8 61.2% 20.2%;
+    --sidebar-accent-foreground: 222.9 13.7% 90%;
+    --sidebar-border: 223.6 11.6% 18.6%;
+    --sidebar-ring: 128.6 44.8% 51%;
   }
+}
+
+@layer base {
+  * { @apply border-border; }
 
   html, body, #root { height: 100%; }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    @apply bg-background text-foreground;
+    font-family: "Geist", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-
-  .border, .border-t, .border-r, .border-b, .border-l, .border-x, .border-y {
-    border-color: rgb(var(--border) / 0.08);
-  }
-  .dark .border, .dark .border-t, .dark .border-r, .dark .border-b,
-  .dark .border-l, .dark .border-x, .dark .border-y {
-    border-color: rgb(var(--border) / 0.1);
-  }
-
-  .dark .shadow-soft-raised { box-shadow: none; }
 
   :focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: 2px solid hsl(var(--ring) / 0.3);
+    outline-offset: 2px;
     border-radius: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }

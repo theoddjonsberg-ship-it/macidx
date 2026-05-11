@@ -33,7 +33,7 @@ export function WelcomeCard() {
 
   return (
     <Card>
-      <p className="font-condensed text-xs tracking-widest uppercase text-muted-foreground">
+      <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
         Välkommen
       </p>
       <h2 className="text-lg font-semibold mt-1">

@@ -41,7 +41,7 @@ export function AuditCard() {
   return (
     <Card>
       <div className="flex items-baseline justify-between">
-        <p className="font-condensed text-xs tracking-widest uppercase text-muted-foreground">
+        <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
           Senaste händelser
         </p>
         <Link to="/audit" className="text-xs text-muted-foreground hover:text-foreground">

@@ -24,7 +24,7 @@ export function TeamCard() {
 
   return (
     <Card>
-      <p className="font-condensed text-xs tracking-widest uppercase text-muted-foreground">
+      <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
         Team
       </p>
 

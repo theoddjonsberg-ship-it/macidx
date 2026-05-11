@@ -34,7 +34,7 @@ export function StepOrganization({ onNext }: Props) {
       <div
         role="tablist"
         aria-label="Välj alternativ"
-        className="flex gap-1 mb-4 p-1 bg-surface-track rounded-input"
+        className="flex gap-1 mb-4 p-1 bg-surface-track rounded-control"
       >
         <ModeButton active={mode === "create"} onClick={() => setMode("create")}>
           Skapa ny
@@ -69,7 +69,7 @@ function ModeButton({
       aria-selected={active}
       onClick={onClick}
       className={cn(
-        "flex-1 h-9 min-h-touch text-sm rounded-input transition-colors ease-standard duration-base",
+        "flex-1 h-9 min-h-touch text-sm rounded-control transition-colors ease-standard duration-base",
         active ? "bg-surface-raised text-foreground" : "text-muted-foreground"
       )}
     >

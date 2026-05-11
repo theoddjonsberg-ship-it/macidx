@@ -16,9 +16,9 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline p-0 h-auto min-h-0",
       },
       size: {
-        sm: "h-9 min-h-touch px-3 rounded-input text-sm",
-        md: "h-11 min-h-touch px-4 rounded-button text-sm",
-        lg: "h-12 min-h-touch px-6 rounded-button text-base",
+        sm: "h-9 min-h-touch px-3 rounded-control text-sm",
+        md: "h-11 min-h-touch px-4 rounded-control text-sm",
+        lg: "h-12 min-h-touch px-6 rounded-control text-base",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },

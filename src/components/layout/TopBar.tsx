@@ -5,7 +5,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useUnreadNotifications } from "@/hooks/useUnreadNotifications";
 import { Avatar } from "@/components/ui/Avatar";
-import { cn } from "@/lib/utils";
 
 export function TopBar() {
   const navigate = useNavigate();
@@ -36,7 +35,7 @@ export function TopBar() {
   return (
     <header className="border-b border-border bg-background">
       <div className="flex items-center justify-between px-4 h-14">
-        <Link to="/" className="font-condensed text-sm font-semibold tracking-widest uppercase">
+        <Link to="/" className="font-mono text-sm font-semibold tracking-widest uppercase">
           MachIndex
         </Link>
 
@@ -48,14 +47,11 @@ export function TopBar() {
                 ? `Notifikationer (${unread} olästa)`
                 : "Notifikationer"
             }
-            className="relative inline-flex items-center justify-center h-11 w-11 min-h-touch min-w-touch rounded-button hover:bg-surface-track"
+            className="relative inline-flex items-center justify-center h-11 w-11 min-h-touch min-w-touch rounded-control hover:bg-surface-track"
           >
             <Bell className="h-5 w-5" strokeWidth={1.75} />
             {!!unread && unread > 0 && (
-              <span
-                className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary"
-                aria-hidden="true"
-              />
+              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
             )}
           </Link>
 
@@ -72,10 +68,7 @@ export function TopBar() {
             {menuOpen && (
               <div
                 role="menu"
-                className={cn(
-                  "absolute right-0 mt-1 w-44 bg-surface-raised border border-border rounded-input shadow-soft-raised dark:shadow-none",
-                  "py-1 z-10"
-                )}
+                className="absolute right-0 mt-1 w-44 bg-popover text-popover-foreground border border-border rounded-control py-1 z-10"
               >
                 <Link
                   to="/account"

@@ -62,7 +62,7 @@ export function StepExperienceRole({ onNext }: Props) {
               aria-checked={active}
               onClick={() => setSelected(opt.value)}
               className={cn(
-                "w-full text-left p-3 rounded-input border transition-colors ease-standard duration-base min-h-touch",
+                "w-full text-left p-3 rounded-control border transition-colors ease-standard duration-base min-h-touch",
                 active
                   ? "border-primary/40 bg-primary/5"
                   : "border-border bg-surface-raised hover:bg-surface-track"

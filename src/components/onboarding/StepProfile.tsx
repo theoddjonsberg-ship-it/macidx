@@ -90,7 +90,7 @@ export function StepProfile({ defaultValues, onNext }: Props) {
           <select
             id="language"
             {...register("language")}
-            className="h-11 min-h-touch w-full rounded-input bg-surface-raised text-foreground border border-border px-3 text-sm transition-colors ease-standard duration-base focus:border-primary/40"
+            className="h-11 min-h-touch w-full rounded-control bg-surface-raised text-foreground border border-border px-3 text-sm transition-colors ease-standard duration-base focus:border-primary/40"
           >
             <option value="sv">Svenska</option>
             <option value="en">English</option>
