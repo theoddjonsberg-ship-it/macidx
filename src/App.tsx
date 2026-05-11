@@ -2,11 +2,13 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { RequireAuth } from "@/components/RequireAuth";
 import { RequireGuest } from "@/components/RequireGuest";
+import { RequireOnboarding } from "@/components/RequireOnboarding";
 import { Login } from "@/pages/Login";
 import { Signup } from "@/pages/Signup";
 import { ForgotPassword } from "@/pages/ForgotPassword";
 import { ResetPassword } from "@/pages/ResetPassword";
 import { VerifyEmail } from "@/pages/VerifyEmail";
+import { Onboarding } from "@/pages/Onboarding";
 import { Forbidden } from "@/pages/Forbidden";
 import { NotFound } from "@/pages/NotFound";
 import { Placeholder } from "@/pages/Placeholder";
@@ -21,13 +23,14 @@ export default function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
 
-        <Route path="/" element={<RequireAuth><Placeholder title="Dashboard" /></RequireAuth>} />
-        <Route path="/onboarding" element={<RequireAuth><Placeholder title="Onboarding" /></RequireAuth>} />
-        <Route path="/organization" element={<RequireAuth><Placeholder title="Organization" /></RequireAuth>} />
-        <Route path="/team" element={<RequireAuth><Placeholder title="Team" /></RequireAuth>} />
-        <Route path="/account" element={<RequireAuth><Placeholder title="Account" /></RequireAuth>} />
-        <Route path="/audit" element={<RequireAuth><Placeholder title="Audit" /></RequireAuth>} />
-        <Route path="/notifications" element={<RequireAuth><Placeholder title="Notifications" /></RequireAuth>} />
+        <Route path="/onboarding" element={<RequireAuth><Onboarding /></RequireAuth>} />
+
+        <Route path="/" element={<RequireAuth><RequireOnboarding><Placeholder title="Dashboard" /></RequireOnboarding></RequireAuth>} />
+        <Route path="/organization" element={<RequireAuth><RequireOnboarding><Placeholder title="Organization" /></RequireOnboarding></RequireAuth>} />
+        <Route path="/team" element={<RequireAuth><RequireOnboarding><Placeholder title="Team" /></RequireOnboarding></RequireAuth>} />
+        <Route path="/account" element={<RequireAuth><RequireOnboarding><Placeholder title="Account" /></RequireOnboarding></RequireAuth>} />
+        <Route path="/audit" element={<RequireAuth><RequireOnboarding><Placeholder title="Audit" /></RequireOnboarding></RequireAuth>} />
+        <Route path="/notifications" element={<RequireAuth><RequireOnboarding><Placeholder title="Notifications" /></RequireOnboarding></RequireAuth>} />
 
         <Route path="/403" element={<Forbidden />} />
         <Route path="/404" element={<NotFound />} />
