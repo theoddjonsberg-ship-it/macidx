@@ -13,19 +13,10 @@ import { Dashboard } from "@/pages/Dashboard";
 import { Team } from "@/pages/Team";
 import { Account } from "@/pages/Account";
 import { Organization } from "@/pages/Organization";
+import { Audit } from "@/pages/Audit";
+import { Notifications } from "@/pages/Notifications";
 import { Forbidden } from "@/pages/Forbidden";
 import { NotFound } from "@/pages/NotFound";
-import { Audit } from "@/pages/Audit";
-import { Placeholder } from "@/pages/Placeholder";
-import { AppShell } from "@/components/layout/AppShell";
-
-function Authed({ title }: { title: string }) {
-  return (
-    <AppShell>
-      <Placeholder title={title} />
-    </AppShell>
-  );
-}
 
 export default function App() {
   return (
@@ -44,7 +35,7 @@ export default function App() {
         <Route path="/account" element={<RequireAuth><RequireOnboarding><Account /></RequireOnboarding></RequireAuth>} />
         <Route path="/organization" element={<RequireAuth><RequireOnboarding><Organization /></RequireOnboarding></RequireAuth>} />
         <Route path="/audit" element={<RequireAuth><RequireOnboarding><Audit /></RequireOnboarding></RequireAuth>} />
-        <Route path="/notifications" element={<RequireAuth><RequireOnboarding><Authed title="Notifications" /></RequireOnboarding></RequireAuth>} />
+        <Route path="/notifications" element={<RequireAuth><RequireOnboarding><Notifications /></RequireOnboarding></RequireAuth>} />
 
         <Route path="/403" element={<Forbidden />} />
         <Route path="/404" element={<NotFound />} />

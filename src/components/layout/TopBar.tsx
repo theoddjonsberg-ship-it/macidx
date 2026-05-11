@@ -32,6 +32,9 @@ export function TopBar() {
     navigate("/login", { replace: true });
   };
 
+  const unreadCount = unread ?? 0;
+  const badgeText = unreadCount > 9 ? "9+" : String(unreadCount);
+
   return (
     <header className="border-b border-border bg-background">
       <div className="flex items-center justify-between px-4 h-14">
@@ -43,15 +46,20 @@ export function TopBar() {
           <Link
             to="/notifications"
             aria-label={
-              unread && unread > 0
-                ? `Notifikationer (${unread} olästa)`
+              unreadCount > 0
+                ? `Notifikationer (${unreadCount} olästa)`
                 : "Notifikationer"
             }
             className="relative inline-flex items-center justify-center h-11 w-11 min-h-touch min-w-touch rounded-control hover:bg-surface-track"
           >
             <Bell className="h-5 w-5" strokeWidth={1.75} />
-            {!!unread && unread > 0 && (
-              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+            {unreadCount > 0 && (
+              <span
+                className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-primary text-primary-foreground text-[10px] font-mono font-semibold flex items-center justify-center tabular-nums"
+                aria-hidden="true"
+              >
+                {badgeText}
+              </span>
             )}
           </Link>
 
