@@ -255,15 +255,21 @@ export function MachineProfile() {
               <span>{categoryLabel}</span>
             </div>
 
-            {/* Action buttons (owner/admin only) */}
-            {canManage && (
-              <div className="flex items-center gap-2 mt-4">
+            {/* Action buttons */}
+            <div className="flex items-center gap-2 mt-4">
+              {canManage && (
                 <Button variant="secondary" size="sm" onClick={startEditing}>
                   <Edit className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.75} />
                   Redigera
                 </Button>
-              </div>
-            )}
+              )}
+              <Link to={`/machines/${machine.id}/report`}>
+                <Button variant="secondary" size="sm">
+                  <FileText className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.75} />
+                  Generera rapport
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Trust Gauge */}

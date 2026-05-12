@@ -32,6 +32,7 @@ export interface MachineRow {
 
 export interface NormalizedMachine {
   id: string;
+  orgId: string;
   name: string;
   brand: string;
   model: string;
@@ -46,6 +47,7 @@ export interface NormalizedMachine {
   machindexId: string | null;
   gpsConnected: boolean;
   lastPosition?: { lat: number; lng: number };
+  lastGpsUpdate: string | null;
   operatingHours: number;
   imageUrl: string | null;
   createdAt: string;
@@ -54,6 +56,7 @@ export interface NormalizedMachine {
 export function normalizeMachine(m: MachineRow): NormalizedMachine {
   return {
     id: m.id,
+    orgId: m.org_id,
     name: m.name,
     brand: m.brand ?? "",
     model: m.model ?? "",
@@ -69,6 +72,7 @@ export function normalizeMachine(m: MachineRow): NormalizedMachine {
     gpsConnected: !!(m.latitude && m.longitude && m.last_gps_update),
     lastPosition:
       m.latitude && m.longitude ? { lat: m.latitude, lng: m.longitude } : undefined,
+    lastGpsUpdate: m.last_gps_update,
     operatingHours: m.operating_hours,
     imageUrl: m.image_url,
     createdAt: m.created_at,
