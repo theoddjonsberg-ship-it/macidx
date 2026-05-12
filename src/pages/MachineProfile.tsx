@@ -37,6 +37,7 @@ import {
   statusChipStyles,
   categoryOptions,
 } from "@/lib/machine-utils";
+import { RiskOverviewCard } from "@/components/machine/RiskOverviewCard";
 import { cn } from "@/lib/utils";
 
 // Tab configuration
@@ -312,6 +313,7 @@ export function MachineProfile() {
           submitError={submitError}
           onSubmit={handleSubmit(onSubmit)}
           onCancel={cancelEditing}
+          showOwnerTips={activeOrg?.org_type === "machine_owner"}
         />
       )}
 
@@ -350,6 +352,7 @@ interface OverviewTabProps {
   submitError: string | null;
   onSubmit: () => void;
   onCancel: () => void;
+  showOwnerTips?: boolean;
 }
 
 function OverviewTab({
@@ -361,6 +364,7 @@ function OverviewTab({
   submitError,
   onSubmit,
   onCancel,
+  showOwnerTips = false,
 }: OverviewTabProps) {
   if (isEditing) {
     return (
@@ -479,7 +483,7 @@ function OverviewTab({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
       {/* Main specs */}
-      <div className="lg:col-span-2">
+      <div className="lg:col-span-2 space-y-4">
         <Card>
           <h3 className="text-sm font-semibold text-foreground mb-4">Specifikationer</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -493,6 +497,9 @@ function OverviewTab({
             ))}
           </div>
         </Card>
+
+        {/* Risk Overview Card */}
+        <RiskOverviewCard machineId={machine.id} showOwnerTips={showOwnerTips} />
       </div>
 
       {/* Trust Score Breakdown */}
