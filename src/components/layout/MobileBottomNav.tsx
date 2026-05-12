@@ -1,18 +1,17 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import { Home, Bell, User, LogOut } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { NavLink } from "react-router-dom";
+import { Home, Bell, User, Wrench, Building2 } from "lucide-react";
 import { useUnreadNotifications } from "@/hooks/useUnreadNotifications";
+import { useActiveOrg } from "@/hooks/useActiveOrg";
 import { cn } from "@/lib/utils";
 
 export function MobileBottomNav() {
-  const navigate = useNavigate();
-  const { signOut } = useAuth();
   const { data: unread } = useUnreadNotifications();
+  const { data: activeOrg } = useActiveOrg();
 
-  const onSignOut = async () => {
-    await signOut();
-    navigate("/login", { replace: true });
-  };
+  const orgType = activeOrg?.org_type ?? "machine_owner";
+  const isMachineOwner = orgType === "machine_owner" || orgType === "dealer" || orgType === "oem";
+  const isPartner = orgType === "insurance" || orgType === "finance" || orgType === "leasing";
+  const isServicePartner = orgType === "service_partner";
 
   const itemBase =
     "flex flex-col items-center justify-center gap-0.5 flex-1 min-h-touch text-[11px]";
@@ -29,6 +28,21 @@ export function MobileBottomNav() {
           <Home className="h-5 w-5" strokeWidth={1.75} />
           <span>Hem</span>
         </NavLink>
+
+        {(isMachineOwner || isServicePartner) && (
+          <NavLink to="/machines" className={({ isActive }) => cn(itemBase, isActive ? active : inactive)}>
+            <Wrench className="h-5 w-5" strokeWidth={1.75} />
+            <span>Maskiner</span>
+          </NavLink>
+        )}
+
+        {isPartner && (
+          <NavLink to="/partner/customers" className={({ isActive }) => cn(itemBase, isActive ? active : inactive)}>
+            <Building2 className="h-5 w-5" strokeWidth={1.75} />
+            <span>Kunder</span>
+          </NavLink>
+        )}
+
         <NavLink
           to="/notifications"
           className={({ isActive }) => cn(itemBase, isActive ? active : inactive)}
@@ -44,14 +58,11 @@ export function MobileBottomNav() {
           </div>
           <span>Notiser</span>
         </NavLink>
+
         <NavLink to="/account" className={({ isActive }) => cn(itemBase, isActive ? active : inactive)}>
           <User className="h-5 w-5" strokeWidth={1.75} />
           <span>Konto</span>
         </NavLink>
-        <button type="button" onClick={onSignOut} className={cn(itemBase, inactive)}>
-          <LogOut className="h-5 w-5" strokeWidth={1.75} />
-          <span>Logga ut</span>
-        </button>
       </div>
     </nav>
   );

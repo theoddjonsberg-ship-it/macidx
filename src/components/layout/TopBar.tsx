@@ -1,12 +1,32 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell, Wrench } from "lucide-react";
+import { Bell, Wrench, Users, Building2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useUnreadNotifications } from "@/hooks/useUnreadNotifications";
-import { useMyOrgs } from "@/hooks/useActiveOrg";
+import { useMyOrgs, useActiveOrg } from "@/hooks/useActiveOrg";
 import { Avatar } from "@/components/ui/Avatar";
 import { OrgSwitcher } from "@/components/OrgSwitcher";
+import { cn } from "@/lib/utils";
+const ORG_TYPE_LABELS: Record<string, string> = {
+  machine_owner: "Maskinagare",
+  service_partner: "Service",
+  insurance: "Forsakring",
+  finance: "Finans",
+  leasing: "Leasing",
+  dealer: "Aterforsaljare",
+  oem: "Tillverkare",
+};
+
+const ORG_TYPE_STYLES: Record<string, string> = {
+  machine_owner: "bg-muted/50 text-muted-foreground",
+  service_partner: "bg-info/10 text-info",
+  insurance: "bg-warning/10 text-warning",
+  finance: "bg-primary/10 text-primary",
+  leasing: "bg-primary/10 text-primary",
+  dealer: "bg-muted/50 text-muted-foreground",
+  oem: "bg-muted/50 text-muted-foreground",
+};
 
 export function TopBar() {
   const navigate = useNavigate();
@@ -14,7 +34,13 @@ export function TopBar() {
   const { data: profile } = useProfile();
   const { data: unread } = useUnreadNotifications();
   const { data: myOrgs } = useMyOrgs();
+  const { data: activeOrg } = useActiveOrg();
   const hasOrgs = (myOrgs ?? []).length > 0;
+  const orgType = activeOrg?.org_type ?? "machine_owner";
+
+  const isMachineOwner = orgType === "machine_owner" || orgType === "dealer" || orgType === "oem";
+  const isPartner = orgType === "insurance" || orgType === "finance" || orgType === "leasing";
+  const isServicePartner = orgType === "service_partner";
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -47,10 +73,47 @@ export function TopBar() {
             MachIndex
           </Link>
           {hasOrgs && <OrgSwitcher />}
+          {activeOrg?.org_type && (
+            <span
+              className={cn(
+                "hidden sm:inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium font-mono uppercase tracking-wider",
+                ORG_TYPE_STYLES[activeOrg.org_type] ?? "bg-muted/50 text-muted-foreground"
+              )}
+            >
+              {ORG_TYPE_LABELS[activeOrg.org_type] ?? activeOrg.org_type}
+            </span>
+          )}
         </div>
 
         <div className="flex items-center gap-2">
-          {hasOrgs && (
+          {hasOrgs && isMachineOwner && (
+            <Link
+              to="/machines"
+              className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-control text-sm text-muted-foreground hover:text-foreground hover:bg-surface-track transition-colors"
+            >
+              <Wrench className="h-4 w-4" strokeWidth={1.75} />
+              <span>Maskiner</span>
+            </Link>
+          )}
+          {hasOrgs && isMachineOwner && (
+            <Link
+              to="/team"
+              className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-control text-sm text-muted-foreground hover:text-foreground hover:bg-surface-track transition-colors"
+            >
+              <Users className="h-4 w-4" strokeWidth={1.75} />
+              <span>Team</span>
+            </Link>
+          )}
+          {hasOrgs && isPartner && (
+            <Link
+              to="/partner/customers"
+              className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-control text-sm text-muted-foreground hover:text-foreground hover:bg-surface-track transition-colors"
+            >
+              <Building2 className="h-4 w-4" strokeWidth={1.75} />
+              <span>Kunder</span>
+            </Link>
+          )}
+          {hasOrgs && isServicePartner && (
             <Link
               to="/machines"
               className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-control text-sm text-muted-foreground hover:text-foreground hover:bg-surface-track transition-colors"

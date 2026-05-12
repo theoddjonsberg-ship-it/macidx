@@ -384,6 +384,15 @@ export interface ProfileRow {
   updated_at: string;
 }
 
+export type OrgType =
+  | "machine_owner"
+  | "service_partner"
+  | "insurance"
+  | "finance"
+  | "leasing"
+  | "dealer"
+  | "oem";
+
 export interface OrganizationRow {
   id: string;
   name: string;
@@ -391,6 +400,7 @@ export interface OrganizationRow {
   country: string | null;
   logo_url: string | null;
   timezone: string;
+  org_type: string | null;
   created_at: string;
   updated_at: string;
 }

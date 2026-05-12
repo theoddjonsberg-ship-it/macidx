@@ -3,13 +3,13 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { RequireAuth } from "@/components/RequireAuth";
 import { RequireGuest } from "@/components/RequireGuest";
 import { RequireOnboarding } from "@/components/RequireOnboarding";
+import { RoleRouter } from "@/components/RoleRouter";
 import { Login } from "@/pages/Login";
 import { Signup } from "@/pages/Signup";
 import { ForgotPassword } from "@/pages/ForgotPassword";
 import { ResetPassword } from "@/pages/ResetPassword";
 import { VerifyEmail } from "@/pages/VerifyEmail";
 import { Onboarding } from "@/pages/Onboarding";
-import { Dashboard } from "@/pages/Dashboard";
 import { Team } from "@/pages/Team";
 import { Account } from "@/pages/Account";
 import { Organization } from "@/pages/Organization";
@@ -20,6 +20,9 @@ import { AcceptInviteById } from "@/pages/AcceptInviteById";
 import { Machines } from "@/pages/Machines";
 import { AddMachine } from "@/pages/AddMachine";
 import { MachineProfile } from "@/pages/MachineProfile";
+import { InsuranceDashboard } from "@/pages/partner/InsuranceDashboard";
+import { FinanceDashboard } from "@/pages/partner/FinanceDashboard";
+import { TechnicianDashboard } from "@/pages/TechnicianDashboard";
 import { Forbidden } from "@/pages/Forbidden";
 import { NotFound } from "@/pages/NotFound";
 
@@ -35,7 +38,7 @@ export default function App() {
 
         <Route path="/onboarding" element={<RequireAuth><Onboarding /></RequireAuth>} />
 
-        <Route path="/" element={<RequireAuth><RequireOnboarding><Dashboard /></RequireOnboarding></RequireAuth>} />
+        <Route path="/" element={<RequireAuth><RequireOnboarding><RoleRouter /></RequireOnboarding></RequireAuth>} />
         <Route path="/team" element={<RequireAuth><RequireOnboarding><Team /></RequireOnboarding></RequireAuth>} />
         <Route path="/account" element={<RequireAuth><RequireOnboarding><Account /></RequireOnboarding></RequireAuth>} />
         <Route path="/organization" element={<RequireAuth><RequireOnboarding><Organization /></RequireOnboarding></RequireAuth>} />
@@ -44,6 +47,9 @@ export default function App() {
         <Route path="/machines" element={<RequireAuth><RequireOnboarding><Machines /></RequireOnboarding></RequireAuth>} />
         <Route path="/machines/add" element={<RequireAuth><RequireOnboarding><AddMachine /></RequireOnboarding></RequireAuth>} />
         <Route path="/machines/:id" element={<RequireAuth><RequireOnboarding><MachineProfile /></RequireOnboarding></RequireAuth>} />
+        <Route path="/partner/insurance" element={<RequireAuth><RequireOnboarding><InsuranceDashboard /></RequireOnboarding></RequireAuth>} />
+        <Route path="/partner/finance" element={<RequireAuth><RequireOnboarding><FinanceDashboard /></RequireOnboarding></RequireAuth>} />
+        <Route path="/technician" element={<RequireAuth><RequireOnboarding><TechnicianDashboard /></RequireOnboarding></RequireAuth>} />
         <Route path="/accept-invite" element={<RequireAuth><AcceptInvite /></RequireAuth>} />
         <Route path="/invite/:id" element={<RequireAuth><AcceptInviteById /></RequireAuth>} />
 
