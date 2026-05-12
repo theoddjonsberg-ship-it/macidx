@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useActiveOrg } from "@/hooks/useActiveOrg";
 import type { MiiLevel } from "@/types/database";
@@ -35,6 +36,32 @@ export interface PortfolioMachine {
 
 export function usePartnerPortfolio() {
   const { data: activeOrg } = useActiveOrg();
+  const queryClient = useQueryClient();
+
+  // Realtime subscription for consent changes
+  useEffect(() => {
+    if (!activeOrg?.id) return;
+
+    const channel = supabase
+      .channel(`partner-consents-${activeOrg.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "data_sharing_consents",
+          filter: `viewer_org_id=eq.${activeOrg.id}`,
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["partner-portfolio", activeOrg.id] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [activeOrg?.id, queryClient]);
 
   return useQuery({
     queryKey: ["partner-portfolio", activeOrg?.id],

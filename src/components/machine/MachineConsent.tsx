@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { Building2, Eye, X, Plus, ShieldCheck } from "lucide-react";
+import { Building2, Eye, X, Plus, ShieldCheck, AlertTriangle } from "lucide-react";
 import {
   useMachineConsents,
   useRevokeConsent,
   VIEWER_TYPE_LABELS,
   CONSENT_LEVEL_LABELS,
+  type ConsentRow,
 } from "@/hooks/useMachineConsents";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
+import { GrantConsentDialog } from "@/components/consent/GrantConsentDialog";
 
 interface MachineConsentProps {
   machineId: string;
@@ -20,10 +22,12 @@ interface MachineConsentProps {
 export function MachineConsent({ machineId, orgId, canManage }: MachineConsentProps) {
   const { data: consents, isLoading } = useMachineConsents(orgId);
   const revokeConsent = useRevokeConsent();
-  const [confirmRevoke, setConfirmRevoke] = useState<string | null>(null);
+  const [confirmRevoke, setConfirmRevoke] = useState<ConsentRow | null>(null);
+  const [showGrantDialog, setShowGrantDialog] = useState(false);
 
-  const handleRevoke = async (consentId: string) => {
-    await revokeConsent.mutateAsync({ consentId, machineId });
+  const handleRevoke = async () => {
+    if (!confirmRevoke) return;
+    await revokeConsent.mutateAsync({ consentId: confirmRevoke.id, machineId });
     setConfirmRevoke(null);
   };
 
@@ -54,8 +58,7 @@ export function MachineConsent({ machineId, orgId, canManage }: MachineConsentPr
             <Button
               variant="secondary"
               size="sm"
-              disabled
-              title="Kommer i nästa prompt"
+              onClick={() => setShowGrantDialog(true)}
             >
               <Plus className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.75} />
               Ge nytt samtycke
@@ -138,7 +141,7 @@ export function MachineConsent({ machineId, orgId, canManage }: MachineConsentPr
                     <Button
                       variant="secondary"
                       size="sm"
-                      onClick={() => setConfirmRevoke(consent.id)}
+                      onClick={() => setConfirmRevoke(consent)}
                       className="flex-shrink-0 text-destructive hover:bg-destructive/10"
                     >
                       <X className="h-3.5 w-3.5" strokeWidth={1.75} />
@@ -153,21 +156,41 @@ export function MachineConsent({ machineId, orgId, canManage }: MachineConsentPr
 
       {/* Revoke confirmation dialog */}
       {confirmRevoke && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-          <Card className="max-w-sm w-full mx-4">
-            <h3 className="text-sm font-semibold text-foreground mb-2">
-              Återkalla samtycke
-            </h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
+          <Card className="max-w-sm w-full">
+            <div className="flex items-center gap-2 mb-3">
+              <AlertTriangle className="h-5 w-5 text-destructive" strokeWidth={1.75} />
+              <h3 className="text-sm font-semibold text-foreground">
+                Återkalla samtycke
+              </h3>
+            </div>
+
+            <div className="p-3 rounded-control bg-muted/10 mb-4">
+              <div className="flex items-center gap-2">
+                <Building2 className="h-4 w-4 text-muted-foreground" strokeWidth={1.75} />
+                <span className="text-sm font-medium text-foreground">
+                  {confirmRevoke.viewer_org?.name ?? "Okänt bolag"}
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {CONSENT_LEVEL_LABELS[confirmRevoke.consent_level] ?? `Nivå ${confirmRevoke.consent_level}`}
+              </p>
+            </div>
+
             <p className="text-sm text-muted-foreground mb-4">
-              Är du säker på att du vill återkalla detta samtycke? Mottagaren
-              kommer inte längre ha tillgång till maskindata.
+              Är du säker på att du vill återkalla detta samtycke?{" "}
+              <span className="font-medium text-foreground">
+                {confirmRevoke.viewer_org?.name}
+              </span>{" "}
+              kommer inte längre ha tillgång till dina maskindata.
             </p>
+
             <div className="flex items-center gap-3">
               <Button variant="secondary" onClick={() => setConfirmRevoke(null)}>
                 Avbryt
               </Button>
               <Button
-                onClick={() => handleRevoke(confirmRevoke)}
+                onClick={handleRevoke}
                 disabled={revokeConsent.isPending}
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               >
@@ -177,6 +200,12 @@ export function MachineConsent({ machineId, orgId, canManage }: MachineConsentPr
           </Card>
         </div>
       )}
+
+      {/* Grant consent dialog */}
+      <GrantConsentDialog
+        open={showGrantDialog}
+        onClose={() => setShowGrantDialog(false)}
+      />
     </div>
   );
 }

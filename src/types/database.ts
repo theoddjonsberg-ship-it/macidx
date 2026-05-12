@@ -48,7 +48,9 @@ export type NotificationType =
   | "team_invite_accepted"
   | "password_changed"
   | "welcome"
-  | "org_invite_received";
+  | "org_invite_received"
+  | "consent_received"
+  | "consent_revoked";
 
 export interface Database {
   public: {
