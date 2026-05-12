@@ -88,3 +88,49 @@ export function useCreateMachine() {
     },
   });
 }
+
+export interface UpdateMachineInput {
+  name?: string;
+  brand?: string;
+  model?: string;
+  serial_number?: string;
+  year?: number | null;
+  type?: string;
+  operating_hours?: number;
+  status?: "active" | "inactive" | "sold" | "scrapped";
+}
+
+export function useUpdateMachine() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      ...input
+    }: UpdateMachineInput & { id: string }) => {
+      const { data, error } = await supabase
+        .from("machines")
+        .update({
+          name: input.name,
+          brand: input.brand ?? null,
+          model: input.model ?? null,
+          serial_number: input.serial_number ?? null,
+          year: input.year ?? null,
+          type: input.type ?? null,
+          operating_hours: input.operating_hours,
+          status: input.status,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", id)
+        .select("id")
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["machines"] });
+      queryClient.invalidateQueries({ queryKey: ["machine", variables.id] });
+    },
+  });
+}
