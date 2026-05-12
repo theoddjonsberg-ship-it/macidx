@@ -10,6 +10,7 @@ export interface PortfolioMachine {
   brand: string | null;
   model: string | null;
   serial_number: string | null;
+  type: string | null;
   mii_level: MiiLevel;
   trust_score: number;
   trust_breakdown: Record<string, unknown> | null;
@@ -104,6 +105,7 @@ export function usePartnerPortfolio() {
         brand: m.brand,
         model: m.model,
         serial_number: m.serial_number,
+        type: m.type,
         mii_level: m.mii_level as MiiLevel,
         trust_score: m.trust_score ?? 0,
         trust_breakdown: m.trust_breakdown as Record<string, unknown> | null,

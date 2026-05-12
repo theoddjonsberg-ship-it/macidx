@@ -75,8 +75,9 @@ export function MachineProfile() {
   const [isEditing, setIsEditing] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Role-based access
-  const canManage = myRole === "owner" || myRole === "admin";
+  // Role-based access - only allow editing for owner/admin AND only if machine belongs to user's org
+  const isOwnMachine = machine?.orgId === activeOrg?.id;
+  const canManage = isOwnMachine && (myRole === "owner" || myRole === "admin");
 
   const {
     register,
