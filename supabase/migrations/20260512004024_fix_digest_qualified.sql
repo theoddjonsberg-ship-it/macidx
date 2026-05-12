@@ -1,0 +1,4 @@
+-- Fix: qualify digest() with extensions schema
+-- (already applied directly via SQL Editor 2026-05-12)
+-- This migration is a no-op since the functions are already updated,
+-- but ensures the fix is tracked in git.

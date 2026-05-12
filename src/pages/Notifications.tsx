@@ -5,6 +5,7 @@ import {
   UserPlus,
   ShieldCheck,
   Sparkles,
+  Mail,
   type LucideIcon,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -26,6 +27,8 @@ function describeType(type: NotificationType): LucideIcon {
       return ShieldCheck;
     case "welcome":
       return Sparkles;
+    case "org_invite_received":
+      return Mail;
     default:
       return Bell;
   }

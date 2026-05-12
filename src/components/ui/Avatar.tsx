@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 interface AvatarProps {
   src?: string | null;
   name?: string | null;
-  size?: "sm" | "md";
+  size?: "sm" | "md" | "lg";
   className?: string;
 }
 
@@ -16,7 +16,12 @@ export function Avatar({ src, name, size = "md", className }: AvatarProps) {
     .join("")
     .toUpperCase();
 
-  const dim = size === "sm" ? "h-8 w-8 text-xs" : "h-9 w-9 text-sm";
+  const dim =
+    size === "sm"
+      ? "h-8 w-8 text-xs"
+      : size === "lg"
+      ? "h-16 w-16 text-base"
+      : "h-9 w-9 text-sm";
 
   return (
     <span

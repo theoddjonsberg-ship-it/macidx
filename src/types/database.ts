@@ -25,7 +25,8 @@ export type Language = "sv" | "en";
 export type NotificationType =
   | "team_invite_accepted"
   | "password_changed"
-  | "welcome";
+  | "welcome"
+  | "org_invite_received";
 
 export interface Database {
   public: {
@@ -88,6 +89,11 @@ export interface Database {
     Views: { [_ in never]: never };
     Functions: {
       accept_invitation: { Args: { _token: string }; Returns: string };
+      accept_invitation_by_id: { Args: { _invitation_id: string }; Returns: string };
+      get_invitation_preview: {
+        Args: { _invitation_id: string };
+        Returns: { org_id: string; org_name: string; role: AppRole; expires_at: string; is_consumed: boolean }[];
+      };
       record_login_attempt: { Args: { _email: string; _ip: string; _success: boolean }; Returns: undefined };
     };
     Enums: { app_role: AppRole };
