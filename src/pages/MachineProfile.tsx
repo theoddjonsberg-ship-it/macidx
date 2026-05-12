@@ -15,6 +15,8 @@ import {
   Clock,
 } from "lucide-react";
 import { useMachine, useUpdateMachine } from "@/hooks/useMachines";
+import { useActiveOrg } from "@/hooks/useActiveOrg";
+import { useMyOrgRole } from "@/hooks/useMyOrgRole";
 import { AppShell } from "@/components/layout/AppShell";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -24,6 +26,10 @@ import { Label } from "@/components/ui/Label";
 import { FormError } from "@/components/ui/FormError";
 import { TrustGauge } from "@/components/machine/TrustGauge";
 import { MIIBadge } from "@/components/machine/MIIBadge";
+import { MachineDocuments } from "@/components/machine/MachineDocuments";
+import { MachineEvents } from "@/components/machine/MachineEvents";
+import { MachineOwnership } from "@/components/machine/MachineOwnership";
+import { MachineConsent } from "@/components/machine/MachineConsent";
 import {
   getCategoryIcon,
   getCategoryLabel,
@@ -61,10 +67,15 @@ export function MachineProfile() {
   const { id } = useParams<{ id: string }>();
   const { data: machine, isLoading } = useMachine(id);
   const updateMachine = useUpdateMachine();
+  const { data: activeOrg } = useActiveOrg();
+  const { data: myRole } = useMyOrgRole(activeOrg?.id);
 
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
   const [isEditing, setIsEditing] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Role-based access
+  const canManage = myRole === "owner" || myRole === "admin";
 
   const {
     register,
@@ -243,13 +254,15 @@ export function MachineProfile() {
               <span>{categoryLabel}</span>
             </div>
 
-            {/* Action buttons */}
-            <div className="flex items-center gap-2 mt-4">
-              <Button variant="secondary" size="sm" onClick={startEditing}>
-                <Edit className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.75} />
-                Redigera
-              </Button>
-            </div>
+            {/* Action buttons (owner/admin only) */}
+            {canManage && (
+              <div className="flex items-center gap-2 mt-4">
+                <Button variant="secondary" size="sm" onClick={startEditing}>
+                  <Edit className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.75} />
+                  Redigera
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Trust Gauge */}
@@ -303,30 +316,24 @@ export function MachineProfile() {
       )}
 
       {activeTab === "documents" && (
-        <PlaceholderTab
-          title="Dokument"
-          description="Hantera maskinens dokument, kvitton och certifikat."
+        <MachineDocuments machineId={machine.id} canManage={canManage} />
+      )}
+
+      {activeTab === "events" && <MachineEvents machineId={machine.id} />}
+
+      {activeTab === "ownership" && activeOrg && (
+        <MachineOwnership
+          machine={machine}
+          orgId={activeOrg.id}
+          canManage={canManage}
         />
       )}
 
-      {activeTab === "events" && (
-        <PlaceholderTab
-          title="Händelser"
-          description="Se maskinens historik: service, ägarbyten och händelser."
-        />
-      )}
-
-      {activeTab === "ownership" && (
-        <PlaceholderTab
-          title="Ägarskap"
-          description="Visa och verifiera ägarkedjan för denna maskin."
-        />
-      )}
-
-      {activeTab === "consent" && (
-        <PlaceholderTab
-          title="Samtycke"
-          description="Hantera datadelning och samtycken för denna maskin."
+      {activeTab === "consent" && activeOrg && (
+        <MachineConsent
+          machineId={machine.id}
+          orgId={activeOrg.id}
+          canManage={canManage}
         />
       )}
     </AppShell>
@@ -547,19 +554,3 @@ function TrustCategory({
   );
 }
 
-// Placeholder for unimplemented tabs
-function PlaceholderTab({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
-  return (
-    <Card className="flex flex-col items-center justify-center py-12 text-center">
-      <p className="text-sm font-semibold text-foreground mb-1">{title}</p>
-      <p className="text-xs text-muted-foreground mb-2">{description}</p>
-      <p className="text-xs text-muted-foreground/60">Kommer i nästa prompt.</p>
-    </Card>
-  );
-}

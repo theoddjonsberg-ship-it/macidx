@@ -40,9 +40,9 @@ export interface Database {
         Relationships: [];
       };
       organizations: {
-        Row: { id: string; name: string; org_number: string | null; country: string | null; logo_url: string | null; timezone: string; created_at: string; updated_at: string };
-        Insert: { id?: string; name: string; org_number?: string | null; country?: string | null; logo_url?: string | null; timezone?: string; created_at?: string; updated_at?: string };
-        Update: { id?: string; name?: string; org_number?: string | null; country?: string | null; logo_url?: string | null; timezone?: string; created_at?: string; updated_at?: string };
+        Row: { id: string; name: string; org_number: string | null; country: string | null; logo_url: string | null; timezone: string; org_type: string | null; contact_person: string | null; contact_email: string | null; contact_phone: string | null; created_at: string; updated_at: string };
+        Insert: { id?: string; name: string; org_number?: string | null; country?: string | null; logo_url?: string | null; timezone?: string; org_type?: string | null; contact_person?: string | null; contact_email?: string | null; contact_phone?: string | null; created_at?: string; updated_at?: string };
+        Update: { id?: string; name?: string; org_number?: string | null; country?: string | null; logo_url?: string | null; timezone?: string; org_type?: string | null; contact_person?: string | null; contact_email?: string | null; contact_phone?: string | null; created_at?: string; updated_at?: string };
         Relationships: [];
       };
       organization_members: {
@@ -166,6 +166,171 @@ export interface Database {
           operating_hours?: number;
           next_service_hours?: number | null;
           estimated_residual_value?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      machine_events: {
+        Row: {
+          id: string;
+          machine_id: string;
+          actor_user_id: string | null;
+          event_type: string;
+          title: string;
+          description: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          machine_id: string;
+          actor_user_id?: string | null;
+          event_type: string;
+          title: string;
+          description?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          machine_id?: string;
+          actor_user_id?: string | null;
+          event_type?: string;
+          title?: string;
+          description?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      documents: {
+        Row: {
+          id: string;
+          machine_id: string | null;
+          org_id: string | null;
+          document_type: string;
+          title: string;
+          file_path: string;
+          file_size_bytes: number | null;
+          mime_type: string | null;
+          version: number;
+          parent_document_id: string | null;
+          tags: string[];
+          metadata: Json;
+          uploaded_by: string | null;
+          created_at: string;
+          deleted_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          machine_id?: string | null;
+          org_id?: string | null;
+          document_type: string;
+          title: string;
+          file_path: string;
+          file_size_bytes?: number | null;
+          mime_type?: string | null;
+          version?: number;
+          parent_document_id?: string | null;
+          tags?: string[];
+          metadata?: Json;
+          uploaded_by?: string | null;
+          created_at?: string;
+          deleted_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          machine_id?: string | null;
+          org_id?: string | null;
+          document_type?: string;
+          title?: string;
+          file_path?: string;
+          file_size_bytes?: number | null;
+          mime_type?: string | null;
+          version?: number;
+          parent_document_id?: string | null;
+          tags?: string[];
+          metadata?: Json;
+          uploaded_by?: string | null;
+          created_at?: string;
+          deleted_at?: string | null;
+        };
+        Relationships: [];
+      };
+      ownership_history: {
+        Row: {
+          id: string;
+          machine_id: string;
+          org_id: string;
+          from_date: string;
+          to_date: string | null;
+          transfer_method: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          machine_id: string;
+          org_id: string;
+          from_date?: string;
+          to_date?: string | null;
+          transfer_method?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          machine_id?: string;
+          org_id?: string;
+          from_date?: string;
+          to_date?: string | null;
+          transfer_method?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      data_sharing_consents: {
+        Row: {
+          id: string;
+          customer_org_id: string;
+          viewer_org_id: string;
+          viewer_type: string;
+          consent_level: number;
+          purpose: string | null;
+          granted_at: string;
+          expires_at: string | null;
+          revoked_at: string | null;
+          granted_by: string | null;
+          revoked_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          customer_org_id: string;
+          viewer_org_id: string;
+          viewer_type: string;
+          consent_level: number;
+          purpose?: string | null;
+          granted_at?: string;
+          expires_at?: string | null;
+          revoked_at?: string | null;
+          granted_by?: string | null;
+          revoked_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          customer_org_id?: string;
+          viewer_org_id?: string;
+          viewer_type?: string;
+          consent_level?: number;
+          purpose?: string | null;
+          granted_at?: string;
+          expires_at?: string | null;
+          revoked_at?: string | null;
+          granted_by?: string | null;
+          revoked_by?: string | null;
           created_at?: string;
           updated_at?: string;
         };
