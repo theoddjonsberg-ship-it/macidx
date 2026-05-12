@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, Plus, Building2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile, useInvalidateProfile } from "@/hooks/useProfile";
+import { useActiveOrg, useMyOrgs } from "@/hooks/useActiveOrg";
 import {
   profileFormSchema,
   type ProfileFormInput,
@@ -13,12 +15,31 @@ import {
 import { AppShell } from "@/components/layout/AppShell";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { AvatarUpload } from "@/components/account/AvatarUpload";
+import { CreateOrgDialog } from "@/components/CreateOrgDialog";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { FormError } from "@/components/ui/FormError";
 import { Skeleton } from "@/components/ui/Skeleton";
+import type { AppRole } from "@/types/database";
+
+function roleLabel(role: AppRole): string {
+  switch (role) {
+    case "owner":
+      return "Ägare";
+    case "admin":
+      return "Administratör";
+    case "member":
+      return "Medlem";
+    case "viewer":
+      return "Läsare";
+    case "platform_admin":
+      return "Plattformsadmin";
+    default:
+      return role;
+  }
+}
 
 export function Account() {
   return (
@@ -27,6 +48,7 @@ export function Account() {
       <div className="space-y-4 max-w-xl">
         <ProfileCard />
         <PasswordCard />
+        <OrganizationsCard />
       </div>
     </AppShell>
   );
@@ -186,5 +208,80 @@ function PasswordCard() {
         </div>
       </form>
     </Card>
+  );
+}
+
+function OrganizationsCard() {
+  const { data: activeOrg } = useActiveOrg();
+  const { data: myOrgs, isLoading } = useMyOrgs();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const orgs = myOrgs ?? [];
+
+  if (isLoading) {
+    return (
+      <Card>
+        <Skeleton className="h-4 w-32 mb-3" />
+        <Skeleton className="h-12 w-full mb-2" />
+        <Skeleton className="h-12 w-full" />
+      </Card>
+    );
+  }
+
+  return (
+    <>
+      <Card>
+        <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
+          Mina organisationer
+        </p>
+
+        {orgs.length === 0 ? (
+          <p className="text-sm text-muted-foreground mt-3">
+            Du är inte medlem i någon organisation.
+          </p>
+        ) : (
+          <ul className="mt-3 divide-y divide-border">
+            {orgs.map((org) => {
+              const isActive = org.org_id === activeOrg?.id;
+              return (
+                <li key={org.org_id} className="py-3 flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-coin bg-surface-track flex items-center justify-center shrink-0">
+                    <Building2
+                      className="h-4 w-4 text-muted-foreground"
+                      strokeWidth={1.75}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{org.org_name}</p>
+                    <p className="text-xs text-muted-foreground">{roleLabel(org.role)}</p>
+                  </div>
+                  {isActive && (
+                    <span className="inline-flex items-center gap-1 text-xs text-primary">
+                      <Check className="h-4 w-4" strokeWidth={1.75} />
+                      Aktiv
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
+        <div className="mt-4">
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={() => setDialogOpen(true)}
+            className="inline-flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" strokeWidth={1.75} />
+            Skapa ny organisation
+          </Button>
+        </div>
+      </Card>
+
+      <CreateOrgDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
+    </>
   );
 }

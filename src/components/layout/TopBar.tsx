@@ -4,13 +4,17 @@ import { Bell } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useUnreadNotifications } from "@/hooks/useUnreadNotifications";
+import { useMyOrgs } from "@/hooks/useActiveOrg";
 import { Avatar } from "@/components/ui/Avatar";
+import { OrgSwitcher } from "@/components/OrgSwitcher";
 
 export function TopBar() {
   const navigate = useNavigate();
   const { signOut } = useAuth();
   const { data: profile } = useProfile();
   const { data: unread } = useUnreadNotifications();
+  const { data: myOrgs } = useMyOrgs();
+  const hasOrgs = (myOrgs ?? []).length > 0;
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -38,9 +42,12 @@ export function TopBar() {
   return (
     <header className="border-b border-border bg-background">
       <div className="flex items-center justify-between px-4 h-14">
-        <Link to="/" className="font-mono text-sm font-semibold tracking-widest uppercase">
-          MachIndex
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link to="/" className="font-mono text-sm font-semibold tracking-widest uppercase shrink-0">
+            MachIndex
+          </Link>
+          {hasOrgs && <OrgSwitcher />}
+        </div>
 
         <div className="flex items-center gap-2">
           <Link
