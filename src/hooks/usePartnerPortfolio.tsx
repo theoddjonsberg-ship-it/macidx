@@ -19,6 +19,7 @@ export interface PortfolioMachine {
   latitude: number | null;
   longitude: number | null;
   last_gps_update: string | null;
+  estimated_residual_value: number | null;
   organization: {
     id: string;
     name: string;
@@ -86,6 +87,7 @@ export function usePartnerPortfolio() {
         latitude: m.latitude,
         longitude: m.longitude,
         last_gps_update: m.last_gps_update,
+        estimated_residual_value: m.estimated_residual_value ?? null,
         organization: orgMap.get(m.org_id) ?? null,
         consent: consents?.find((c) => c.customer_org_id === m.org_id) ?? null,
       }));
