@@ -22,6 +22,8 @@ import { AddMachine } from "@/pages/AddMachine";
 import { MachineProfile } from "@/pages/MachineProfile";
 import { InsuranceDashboard } from "@/pages/partner/InsuranceDashboard";
 import { FinanceDashboard } from "@/pages/partner/FinanceDashboard";
+import { PartnerCustomers } from "@/pages/partner/PartnerCustomers";
+import { PartnerCustomerDetail } from "@/pages/partner/PartnerCustomerDetail";
 import { TechnicianDashboard } from "@/pages/TechnicianDashboard";
 import { Forbidden } from "@/pages/Forbidden";
 import { NotFound } from "@/pages/NotFound";
@@ -49,6 +51,8 @@ export default function App() {
         <Route path="/machines/:id" element={<RequireAuth><RequireOnboarding><MachineProfile /></RequireOnboarding></RequireAuth>} />
         <Route path="/partner/insurance" element={<RequireAuth><RequireOnboarding><InsuranceDashboard /></RequireOnboarding></RequireAuth>} />
         <Route path="/partner/finance" element={<RequireAuth><RequireOnboarding><FinanceDashboard /></RequireOnboarding></RequireAuth>} />
+        <Route path="/partner/customers" element={<RequireAuth><RequireOnboarding><PartnerCustomers /></RequireOnboarding></RequireAuth>} />
+        <Route path="/partner/customers/:orgId" element={<RequireAuth><RequireOnboarding><PartnerCustomerDetail /></RequireOnboarding></RequireAuth>} />
         <Route path="/technician" element={<RequireAuth><RequireOnboarding><TechnicianDashboard /></RequireOnboarding></RequireAuth>} />
         <Route path="/accept-invite" element={<RequireAuth><AcceptInvite /></RequireAuth>} />
         <Route path="/invite/:id" element={<RequireAuth><AcceptInviteById /></RequireAuth>} />
