@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { Shield, TrendingDown, Clock, AlertTriangle, ChevronRight } from "lucide-react";
+import { Shield, TrendingDown, Clock, AlertTriangle, ChevronRight, Plus } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { KpiCard } from "@/components/partner/KpiCard";
 import { CustomerPortfolioSection } from "@/components/partner/CustomerPortfolioSection";
@@ -168,6 +169,14 @@ export function InsuranceDashboard() {
       <DashboardHeader
         title="Forsakringsoversikt"
         subtitle={`${stats.total} forsakrade maskiner i din portfolj`}
+        actions={
+          <Button asChild>
+            <Link to="/partner/quote/new">
+              <Plus className="h-4 w-4 mr-1.5" strokeWidth={1.75} />
+              Ny offert
+            </Link>
+          </Button>
+        }
       />
 
       {/* Hero KPIs */}

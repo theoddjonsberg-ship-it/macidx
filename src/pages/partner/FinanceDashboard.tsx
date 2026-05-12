@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { Banknote, TrendingUp, AlertTriangle, Clock, ChevronRight } from "lucide-react";
+import { Banknote, TrendingUp, AlertTriangle, Clock, ChevronRight, Plus } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { KpiCard } from "@/components/partner/KpiCard";
 import { CustomerPortfolioSection } from "@/components/partner/CustomerPortfolioSection";
@@ -197,6 +198,14 @@ export function FinanceDashboard() {
       <DashboardHeader
         title="Finansportfolj"
         subtitle={`${stats.total} aktiva avtal i ${stats.customerCount} kundorganisationer`}
+        actions={
+          <Button asChild>
+            <Link to="/partner/quote/new">
+              <Plus className="h-4 w-4 mr-1.5" strokeWidth={1.75} />
+              Ny offert
+            </Link>
+          </Button>
+        }
       />
 
       {/* Hero KPIs */}

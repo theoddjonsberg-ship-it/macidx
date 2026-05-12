@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell, Wrench, Users, Building2 } from "lucide-react";
+import { Bell, Wrench, Users, Building2, FileText } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useUnreadNotifications } from "@/hooks/useUnreadNotifications";
@@ -111,6 +111,15 @@ export function TopBar() {
             >
               <Building2 className="h-4 w-4" strokeWidth={1.75} />
               <span>Kunder</span>
+            </Link>
+          )}
+          {hasOrgs && isPartner && (
+            <Link
+              to="/partner/quotes"
+              className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-control text-sm text-muted-foreground hover:text-foreground hover:bg-surface-track transition-colors"
+            >
+              <FileText className="h-4 w-4" strokeWidth={1.75} />
+              <span>Offerter</span>
             </Link>
           )}
           {hasOrgs && isServicePartner && (

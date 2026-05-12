@@ -24,6 +24,10 @@ import { InsuranceDashboard } from "@/pages/partner/InsuranceDashboard";
 import { FinanceDashboard } from "@/pages/partner/FinanceDashboard";
 import { PartnerCustomers } from "@/pages/partner/PartnerCustomers";
 import { PartnerCustomerDetail } from "@/pages/partner/PartnerCustomerDetail";
+import { PartnerQuotes } from "@/pages/partner/PartnerQuotes";
+import { PartnerQuoteDetail } from "@/pages/partner/PartnerQuoteDetail";
+import { PartnerQuoteReport } from "@/pages/partner/PartnerQuoteReport";
+import { QuoteWizard } from "@/pages/partner/QuoteWizard";
 import { TechnicianDashboard } from "@/pages/TechnicianDashboard";
 import { Forbidden } from "@/pages/Forbidden";
 import { NotFound } from "@/pages/NotFound";
@@ -53,6 +57,10 @@ export default function App() {
         <Route path="/partner/finance" element={<RequireAuth><RequireOnboarding><FinanceDashboard /></RequireOnboarding></RequireAuth>} />
         <Route path="/partner/customers" element={<RequireAuth><RequireOnboarding><PartnerCustomers /></RequireOnboarding></RequireAuth>} />
         <Route path="/partner/customers/:orgId" element={<RequireAuth><RequireOnboarding><PartnerCustomerDetail /></RequireOnboarding></RequireAuth>} />
+        <Route path="/partner/quotes" element={<RequireAuth><RequireOnboarding><PartnerQuotes /></RequireOnboarding></RequireAuth>} />
+        <Route path="/partner/quotes/:id" element={<RequireAuth><RequireOnboarding><PartnerQuoteDetail /></RequireOnboarding></RequireAuth>} />
+        <Route path="/partner/quotes/:id/report" element={<RequireAuth><RequireOnboarding><PartnerQuoteReport /></RequireOnboarding></RequireAuth>} />
+        <Route path="/partner/quote/new" element={<RequireAuth><RequireOnboarding><QuoteWizard /></RequireOnboarding></RequireAuth>} />
         <Route path="/technician" element={<RequireAuth><RequireOnboarding><TechnicianDashboard /></RequireOnboarding></RequireAuth>} />
         <Route path="/accept-invite" element={<RequireAuth><AcceptInvite /></RequireAuth>} />
         <Route path="/invite/:id" element={<RequireAuth><AcceptInviteById /></RequireAuth>} />

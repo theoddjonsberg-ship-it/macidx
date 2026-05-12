@@ -358,6 +358,48 @@ export interface Database {
         };
         Relationships: [];
       };
+      quote_drafts: {
+        Row: {
+          id: string;
+          partner_org_id: string;
+          customer_org_id: string;
+          machine_ids: string[];
+          analysis_text: string | null;
+          recommendation: string | null;
+          risk_snapshot: Json;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+          exported_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          partner_org_id: string;
+          customer_org_id: string;
+          machine_ids?: string[];
+          analysis_text?: string | null;
+          recommendation?: string | null;
+          risk_snapshot?: Json;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          exported_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          partner_org_id?: string;
+          customer_org_id?: string;
+          machine_ids?: string[];
+          analysis_text?: string | null;
+          recommendation?: string | null;
+          risk_snapshot?: Json;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          exported_at?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: { [_ in never]: never };
     Functions: {
