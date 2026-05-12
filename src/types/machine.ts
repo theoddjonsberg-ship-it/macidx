@@ -1,4 +1,4 @@
-import type { MiiLevel } from "./database";
+import type { MiiLevel, TrustBreakdown } from "./database";
 
 export type MachineStatus = "active" | "inactive" | "sold" | "scrapped";
 
@@ -15,7 +15,7 @@ export interface MachineRow {
   registration_number: string | null;
   status: MachineStatus;
   trust_score: number;
-  trust_breakdown: Record<string, number> | null;
+  trust_breakdown: TrustBreakdown | null;
   verification_level: number;
   mii_level: MiiLevel;
   machindex_id: string | null;
@@ -40,6 +40,7 @@ export interface NormalizedMachine {
   category: string;
   status: MachineStatus;
   trustScore: number;
+  trustBreakdown: TrustBreakdown | null;
   verificationLevel: number;
   miiLevel: MiiLevel;
   machindexId: string | null;
@@ -61,6 +62,7 @@ export function normalizeMachine(m: MachineRow): NormalizedMachine {
     category: m.type ?? "other",
     status: m.status,
     trustScore: m.trust_score,
+    trustBreakdown: m.trust_breakdown,
     verificationLevel: m.verification_level,
     miiLevel: m.mii_level,
     machindexId: m.machindex_id,

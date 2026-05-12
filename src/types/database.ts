@@ -6,6 +6,26 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
+export interface TrustBreakdown {
+  identity: number;
+  documents: number;
+  verification: number;
+  history: number;
+  identity_max: number;
+  documents_max: number;
+  verification_max: number;
+  history_max: number;
+  filled_fields: number;
+  total_fields: number;
+  doc_count: number;
+  photo_count: number;
+  insurance_count: number;
+  event_count: number;
+  has_gps: boolean;
+  has_verification: boolean;
+  recalculated_at: string;
+}
+
 export type ExperienceRole =
   | "machine_owner"
   | "service_tech"
@@ -101,7 +121,7 @@ export interface Database {
           registration_number: string | null;
           status: string;
           trust_score: number;
-          trust_breakdown: Json | null;
+          trust_breakdown: TrustBreakdown | null;
           verification_level: number;
           mii_level: MiiLevel;
           machindex_id: string | null;

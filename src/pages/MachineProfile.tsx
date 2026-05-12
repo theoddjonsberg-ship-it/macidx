@@ -502,14 +502,26 @@ function OverviewTab({
           <div className="flex flex-col items-center gap-4">
             <TrustGauge score={machine.trustScore} size="lg" />
             <div className="w-full space-y-2">
-              <TrustCategory label="Identitet" value={machine.verificationLevel * 10} max={40} />
               <TrustCategory
-                label="GPS"
-                value={machine.gpsConnected ? 20 : 0}
-                max={20}
+                label="Identitet"
+                value={machine.trustBreakdown?.identity ?? 0}
+                max={machine.trustBreakdown?.identity_max ?? 25}
               />
-              <TrustCategory label="Dokument" value={0} max={20} />
-              <TrustCategory label="Historik" value={0} max={20} />
+              <TrustCategory
+                label="Dokument"
+                value={machine.trustBreakdown?.documents ?? 0}
+                max={machine.trustBreakdown?.documents_max ?? 25}
+              />
+              <TrustCategory
+                label="Verifiering"
+                value={machine.trustBreakdown?.verification ?? 0}
+                max={machine.trustBreakdown?.verification_max ?? 25}
+              />
+              <TrustCategory
+                label="Historik"
+                value={machine.trustBreakdown?.history ?? 0}
+                max={machine.trustBreakdown?.history_max ?? 25}
+              />
             </div>
           </div>
         </Card>
