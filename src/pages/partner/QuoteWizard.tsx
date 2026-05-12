@@ -704,7 +704,7 @@ export function QuoteWizard() {
 
       {/* Cancel Confirmation */}
       {showCancelConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4">
           <Card className="max-w-sm w-full">
             <div className="flex items-center gap-2 mb-3">
               <AlertTriangle className="h-5 w-5 text-warning" strokeWidth={1.75} />

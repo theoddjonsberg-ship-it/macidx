@@ -138,7 +138,7 @@ export function GrantConsentDialog({ open, onClose, onSuccess }: GrantConsentDia
   const durationOption = DURATION_OPTIONS.find((o) => o.value === duration);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4">
       <Card className="w-full max-w-lg max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">

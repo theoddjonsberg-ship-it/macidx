@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { UserPlus } from "lucide-react";
+import { UserPlus, Users } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
+import { EmptyStateCard } from "@/components/dashboard/EmptyStateCard";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -78,7 +79,11 @@ export function Team() {
             </Button>
           </div>
         ) : !members || members.length === 0 ? (
-          <p className="text-sm text-muted-foreground mt-3">Inga medlemmar ännu.</p>
+          <EmptyStateCard
+            icon={Users}
+            title="Inga medlemmar"
+            description="Bjud in kollegor for att borja samarbeta."
+          />
         ) : (
           <ul className="mt-3 divide-y divide-border">
             {members.map((m) => (

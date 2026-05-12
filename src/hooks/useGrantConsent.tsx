@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { useActiveOrg } from "@/hooks/useActiveOrg";
 import { useAuth } from "@/hooks/useAuth";
@@ -42,6 +43,10 @@ export function useGrantConsent() {
       queryClient.invalidateQueries({ queryKey: ["machine-consents"] });
       queryClient.invalidateQueries({ queryKey: ["org-granted-consents"] });
       queryClient.invalidateQueries({ queryKey: ["partner-portfolio"] });
+      toast.success("Samtycke skapat");
+    },
+    onError: () => {
+      toast.error("Kunde inte skapa samtycke");
     },
   });
 }

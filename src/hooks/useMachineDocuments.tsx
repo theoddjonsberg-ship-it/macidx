@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { useActiveOrg } from "@/hooks/useActiveOrg";
@@ -111,6 +112,10 @@ export function useUploadDocument() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["machine-documents", variables.machineId] });
       queryClient.invalidateQueries({ queryKey: ["machine-events", variables.machineId] });
+      toast.success("Dokument uppladdat");
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Kunde inte ladda upp dokument");
     },
   });
 }
@@ -143,6 +148,10 @@ export function useDeleteDocument() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["machine-documents", variables.machineId] });
       queryClient.invalidateQueries({ queryKey: ["machine-events", variables.machineId] });
+      toast.success("Dokument borttaget");
+    },
+    onError: () => {
+      toast.error("Kunde inte ta bort dokument");
     },
   });
 }

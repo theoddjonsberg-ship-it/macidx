@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -120,6 +121,10 @@ export function useRevokeConsent() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["machine-consents"] });
       queryClient.invalidateQueries({ queryKey: ["machine-events"] });
+      toast.success("Samtycke aterkallat");
+    },
+    onError: () => {
+      toast.error("Kunde inte aterkalla samtycke");
     },
   });
 }
