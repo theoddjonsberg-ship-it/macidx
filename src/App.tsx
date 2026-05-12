@@ -17,6 +17,9 @@ import { Audit } from "@/pages/Audit";
 import { Notifications } from "@/pages/Notifications";
 import { AcceptInvite } from "@/pages/AcceptInvite";
 import { AcceptInviteById } from "@/pages/AcceptInviteById";
+import { Machines } from "@/pages/Machines";
+import { AddMachine } from "@/pages/AddMachine";
+import { MachineProfile } from "@/pages/MachineProfile";
 import { Forbidden } from "@/pages/Forbidden";
 import { NotFound } from "@/pages/NotFound";
 
@@ -38,6 +41,9 @@ export default function App() {
         <Route path="/organization" element={<RequireAuth><RequireOnboarding><Organization /></RequireOnboarding></RequireAuth>} />
         <Route path="/audit" element={<RequireAuth><RequireOnboarding><Audit /></RequireOnboarding></RequireAuth>} />
         <Route path="/notifications" element={<RequireAuth><RequireOnboarding><Notifications /></RequireOnboarding></RequireAuth>} />
+        <Route path="/machines" element={<RequireAuth><RequireOnboarding><Machines /></RequireOnboarding></RequireAuth>} />
+        <Route path="/machines/add" element={<RequireAuth><RequireOnboarding><AddMachine /></RequireOnboarding></RequireAuth>} />
+        <Route path="/machines/:id" element={<RequireAuth><RequireOnboarding><MachineProfile /></RequireOnboarding></RequireAuth>} />
         <Route path="/accept-invite" element={<RequireAuth><AcceptInvite /></RequireAuth>} />
         <Route path="/invite/:id" element={<RequireAuth><AcceptInviteById /></RequireAuth>} />
 

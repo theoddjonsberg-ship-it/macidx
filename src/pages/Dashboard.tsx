@@ -4,6 +4,7 @@ import { WelcomeCard } from "@/components/dashboard/WelcomeCard";
 import { TeamCard } from "@/components/dashboard/TeamCard";
 import { AuditCard } from "@/components/dashboard/AuditCard";
 import { NextStepsCard } from "@/components/dashboard/NextStepsCard";
+import { MachinesCard } from "@/components/dashboard/MachinesCard";
 import { ComingNextCard } from "@/components/dashboard/ComingNextCard";
 
 export function Dashboard() {
@@ -11,7 +12,7 @@ export function Dashboard() {
     <AppShell>
       <DashboardHeader
         title="Översikt"
-        subtitle="Hantera team, behörigheter och organisationsstatus. Maskinregistret öppnas i v0.2."
+        subtitle="Hantera team, behörigheter och maskinregistret."
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
@@ -19,17 +20,21 @@ export function Dashboard() {
           <WelcomeCard />
         </div>
         <div>
-          <TeamCard />
+          <MachinesCard />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
         <div className="lg:col-span-2">
-          <AuditCard />
+          <TeamCard />
         </div>
         <div>
           <NextStepsCard />
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <AuditCard />
       </div>
 
       <ComingNextCard />

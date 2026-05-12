@@ -22,6 +22,8 @@ export type AppRole =
 
 export type Language = "sv" | "en";
 
+export type MiiLevel = "L0" | "L1" | "L2" | "L3" | "L4";
+
 export type NotificationType =
   | "team_invite_accepted"
   | "password_changed"
@@ -83,6 +85,90 @@ export interface Database {
         Row: { id: string; user_id: string | null; event_type: string; ip_hash: string | null; severity: string; metadata: Json; occurred_at: string };
         Insert: { id?: string; user_id?: string | null; event_type: string; ip_hash?: string | null; severity?: string; metadata?: Json; occurred_at?: string };
         Update: { id?: string; user_id?: string | null; event_type?: string; ip_hash?: string | null; severity?: string; metadata?: Json; occurred_at?: string };
+        Relationships: [];
+      };
+      machines: {
+        Row: {
+          id: string;
+          org_id: string;
+          owner_user_id: string | null;
+          name: string;
+          type: string | null;
+          brand: string | null;
+          model: string | null;
+          year: number | null;
+          serial_number: string | null;
+          registration_number: string | null;
+          status: string;
+          trust_score: number;
+          trust_breakdown: Json | null;
+          verification_level: number;
+          mii_level: MiiLevel;
+          machindex_id: string | null;
+          image_url: string | null;
+          latitude: number | null;
+          longitude: number | null;
+          last_gps_update: string | null;
+          operating_hours: number;
+          next_service_hours: number | null;
+          estimated_residual_value: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          org_id: string;
+          owner_user_id?: string | null;
+          name: string;
+          type?: string | null;
+          brand?: string | null;
+          model?: string | null;
+          year?: number | null;
+          serial_number?: string | null;
+          registration_number?: string | null;
+          status?: string;
+          trust_score?: number;
+          trust_breakdown?: Json | null;
+          verification_level?: number;
+          mii_level?: MiiLevel;
+          machindex_id?: string | null;
+          image_url?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+          last_gps_update?: string | null;
+          operating_hours?: number;
+          next_service_hours?: number | null;
+          estimated_residual_value?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          org_id?: string;
+          owner_user_id?: string | null;
+          name?: string;
+          type?: string | null;
+          brand?: string | null;
+          model?: string | null;
+          year?: number | null;
+          serial_number?: string | null;
+          registration_number?: string | null;
+          status?: string;
+          trust_score?: number;
+          trust_breakdown?: Json | null;
+          verification_level?: number;
+          mii_level?: MiiLevel;
+          machindex_id?: string | null;
+          image_url?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+          last_gps_update?: string | null;
+          operating_hours?: number;
+          next_service_hours?: number | null;
+          estimated_residual_value?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
         Relationships: [];
       };
     };

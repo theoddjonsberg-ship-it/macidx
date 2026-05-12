@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell } from "lucide-react";
+import { Bell, Wrench } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useUnreadNotifications } from "@/hooks/useUnreadNotifications";
@@ -50,6 +50,15 @@ export function TopBar() {
         </div>
 
         <div className="flex items-center gap-2">
+          {hasOrgs && (
+            <Link
+              to="/machines"
+              className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-control text-sm text-muted-foreground hover:text-foreground hover:bg-surface-track transition-colors"
+            >
+              <Wrench className="h-4 w-4" strokeWidth={1.75} />
+              <span>Maskiner</span>
+            </Link>
+          )}
           <Link
             to="/notifications"
             aria-label={
