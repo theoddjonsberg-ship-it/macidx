@@ -48,6 +48,11 @@ export interface CreateMachineInput {
   year?: number;
   type?: string;
   operating_hours?: number;
+  verification_metadata?: {
+    source: string;
+    ai_confidence?: Record<string, number>;
+    ai_extracted_at?: string;
+  };
 }
 
 export function useCreateMachine() {
@@ -60,23 +65,30 @@ export function useCreateMachine() {
       if (!activeOrg?.id) throw new Error("Ingen organisation vald");
       if (!user?.id) throw new Error("Inte inloggad");
 
+      // verification_metadata is added by migration, cast to bypass type check until types are regenerated
+      const insertData: Record<string, unknown> = {
+        org_id: activeOrg.id,
+        owner_user_id: user.id,
+        name: input.name,
+        brand: input.brand || null,
+        model: input.model || null,
+        serial_number: input.serial_number || null,
+        year: input.year || null,
+        type: input.type || null,
+        operating_hours: input.operating_hours || 0,
+        status: "active",
+        mii_level: "L0",
+        trust_score: 0,
+        verification_level: 0,
+      };
+      if (input.verification_metadata) {
+        insertData.verification_metadata = input.verification_metadata;
+      }
+
       const { data, error } = await supabase
         .from("machines")
-        .insert({
-          org_id: activeOrg.id,
-          owner_user_id: user.id,
-          name: input.name,
-          brand: input.brand || null,
-          model: input.model || null,
-          serial_number: input.serial_number || null,
-          year: input.year || null,
-          type: input.type || null,
-          operating_hours: input.operating_hours || 0,
-          status: "active",
-          mii_level: "L0",
-          trust_score: 0,
-          verification_level: 0,
-        })
+        // @ts-expect-error verification_metadata added by migration, regenerate types after db push
+        .insert(insertData)
         .select("id")
         .single();
 
