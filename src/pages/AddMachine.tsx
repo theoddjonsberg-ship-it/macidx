@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Camera, Sparkles, CheckCircle2, Loader2 } from "lucide-react";
+import { Camera, Sparkles, CheckCircle2, Loader2, Search } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Card } from "@/components/ui/Card";
@@ -12,17 +12,36 @@ import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { FormError } from "@/components/ui/FormError";
 import { useCreateMachine } from "@/hooks/useMachines";
-import { useScanNameplate, type ScanNameplateResult } from "@/hooks/useScanNameplate";
+import { useScanNameplate } from "@/hooks/useScanNameplate";
+import {
+  useResearchMachine,
+  mapCategoryToFormValue,
+  mapFuelTypeToFormValue,
+  type MachineResearchResult,
+} from "@/hooks/useResearchMachine";
 import { addMachineSchema, type AddMachineInput } from "@/lib/validation/machine";
 import { categoryOptions, fuelTypeOptions } from "@/lib/machine-utils";
+
+interface ExtendedConfidence {
+  manufacturer: number;
+  model: number;
+  serial_number: number;
+  year: number;
+  operating_hours: number;
+  category?: number;
+  fuel_type?: number;
+  weight_kg?: number;
+}
 
 export function AddMachine() {
   const navigate = useNavigate();
   const createMachine = useCreateMachine();
   const scanMutation = useScanNameplate();
+  const researchMutation = useResearchMachine();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [confidence, setConfidence] = useState<ScanNameplateResult["confidence"] | null>(null);
+  const [confidence, setConfidence] = useState<ExtendedConfidence | null>(null);
+  const [scanPhase, setScanPhase] = useState<"idle" | "scanning" | "researching">("idle");
 
   const {
     register,
@@ -51,23 +70,84 @@ export function AddMachine() {
       toast.error("Bilden får vara max 4 MB");
       return;
     }
+
     try {
-      const result = await scanMutation.mutateAsync(file);
-      // Fill in form fields
-      if (result.manufacturer) setValue("brand", result.manufacturer);
-      if (result.model) setValue("model", result.model);
-      if (result.serial_number) setValue("serial_number", result.serial_number);
-      if (result.year) setValue("year", String(result.year));
-      if (result.operating_hours) setValue("operating_hours", String(result.operating_hours));
-      // Auto-generate name if manufacturer and model available
-      if (result.manufacturer && result.model) {
-        setValue("name", `${result.manufacturer} ${result.model}`);
+      // Phase 1: OCR scan
+      setScanPhase("scanning");
+      const scanResult = await scanMutation.mutateAsync(file);
+
+      // Fill in OCR fields
+      if (scanResult.manufacturer) setValue("brand", scanResult.manufacturer);
+      if (scanResult.model) setValue("model", scanResult.model);
+      if (scanResult.serial_number) setValue("serial_number", scanResult.serial_number);
+      if (scanResult.year) setValue("year", String(scanResult.year));
+      if (scanResult.operating_hours) setValue("operating_hours", String(scanResult.operating_hours));
+      if (scanResult.manufacturer && scanResult.model) {
+        setValue("name", `${scanResult.manufacturer} ${scanResult.model}`);
       }
-      setConfidence(result.confidence);
-      toast.success("Typskylt analyserad — verifiera värdena nedan");
+
+      // Initialize confidence with OCR results
+      const newConfidence: ExtendedConfidence = { ...scanResult.confidence };
+      setConfidence(newConfidence);
+
+      toast.success("Typskylt avläst — söker specifikationer...");
+
+      // Phase 2: Deep research (only if we have manufacturer and model)
+      if (scanResult.manufacturer && scanResult.model) {
+        setScanPhase("researching");
+        try {
+          const researchResult = await researchMutation.mutateAsync({
+            manufacturer: scanResult.manufacturer,
+            model: scanResult.model,
+            year: scanResult.year,
+          });
+
+          // Fill in researched fields
+          applyResearchResults(researchResult, newConfidence);
+
+          toast.success("Specifikationer hittade — verifiera värdena");
+        } catch {
+          // Research failed, but OCR succeeded - still useful
+          toast.info("Kunde inte hitta specifikationer — fyll i manuellt");
+        }
+      } else {
+        toast.success("Typskylt analyserad — verifiera värdena nedan");
+      }
     } catch {
       toast.error("Kunde inte analysera bilden");
+    } finally {
+      setScanPhase("idle");
     }
+  };
+
+  const applyResearchResults = (research: MachineResearchResult, currentConfidence: ExtendedConfidence) => {
+    const updatedConfidence = { ...currentConfidence };
+
+    // Category
+    if (research.category) {
+      const categoryValue = mapCategoryToFormValue(research.category);
+      if (categoryValue) {
+        setValue("type", categoryValue);
+        updatedConfidence.category = research.confidence;
+      }
+    }
+
+    // Fuel type
+    if (research.fuel_type) {
+      const fuelValue = mapFuelTypeToFormValue(research.fuel_type);
+      if (fuelValue) {
+        setValue("fuel_type", fuelValue);
+        updatedConfidence.fuel_type = research.confidence;
+      }
+    }
+
+    // Weight
+    if (research.weight_kg) {
+      setValue("weight_kg", String(research.weight_kg));
+      updatedConfidence.weight_kg = research.confidence;
+    }
+
+    setConfidence(updatedConfidence);
   };
 
   const onSubmit = async (values: Record<string, unknown>) => {
@@ -85,7 +165,7 @@ export function AddMachine() {
         verification_metadata: confidence
           ? {
               source: "ai_ocr",
-              ai_confidence: confidence,
+              ai_confidence: confidence as unknown as Record<string, number>,
               ai_extracted_at: new Date().toISOString(),
             }
           : undefined,
@@ -95,6 +175,8 @@ export function AddMachine() {
       setSubmitError(err instanceof Error ? err.message : "Kunde inte spara maskinen");
     }
   };
+
+  const isProcessing = scanPhase !== "idle";
 
   return (
     <AppShell>
@@ -115,7 +197,7 @@ export function AddMachine() {
                 Snabbregistrera via typskyltsfoto
               </h3>
               <p className="text-sm text-muted-foreground mb-3">
-                Ta ett foto av maskinens typskylt så fyller AI:n i fälten åt dig.
+                Ta ett foto av maskinens typskylt så fyller AI:n i fälten och söker upp specifikationer.
               </p>
               <input
                 ref={fileInputRef}
@@ -130,12 +212,17 @@ export function AddMachine() {
                 variant="secondary"
                 size="sm"
                 onClick={() => fileInputRef.current?.click()}
-                disabled={scanMutation.isPending}
+                disabled={isProcessing}
               >
-                {scanMutation.isPending ? (
+                {scanPhase === "scanning" ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-1.5 animate-spin" strokeWidth={1.75} />
-                    Analyserar...
+                    Läser typskylt...
+                  </>
+                ) : scanPhase === "researching" ? (
+                  <>
+                    <Search className="h-4 w-4 mr-1.5 animate-pulse" strokeWidth={1.75} />
+                    Söker specifikationer...
                   </>
                 ) : (
                   <>
@@ -237,7 +324,12 @@ export function AddMachine() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="type">Kategori</Label>
+                <Label htmlFor="type" className="flex items-center gap-1.5">
+                  Kategori
+                  {confidence?.category !== undefined && confidence.category > 0 && (
+                    <AIBadge confidence={confidence.category} source="research" />
+                  )}
+                </Label>
                 <select
                   id="type"
                   {...register("type")}
@@ -256,7 +348,12 @@ export function AddMachine() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="fuel_type">Bränsle</Label>
+                <Label htmlFor="fuel_type" className="flex items-center gap-1.5">
+                  Bränsle
+                  {confidence?.fuel_type !== undefined && confidence.fuel_type > 0 && (
+                    <AIBadge confidence={confidence.fuel_type} source="research" />
+                  )}
+                </Label>
                 <select
                   id="fuel_type"
                   {...register("fuel_type")}
@@ -291,7 +388,12 @@ export function AddMachine() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="weight_kg">Vikt (kg)</Label>
+              <Label htmlFor="weight_kg" className="flex items-center gap-1.5">
+                Vikt (kg)
+                {confidence?.weight_kg !== undefined && confidence.weight_kg > 0 && (
+                  <AIBadge confidence={confidence.weight_kg} source="research" />
+                )}
+              </Label>
               <Input
                 id="weight_kg"
                 type="number"
@@ -305,7 +407,7 @@ export function AddMachine() {
             <FormError>{submitError}</FormError>
 
             <div className="flex items-center gap-3 pt-2">
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled={isSubmitting || isProcessing}>
                 {isSubmitting ? "Sparar..." : "Spara maskin"}
               </Button>
               <Button type="button" variant="secondary" onClick={() => navigate("/machines")}>
@@ -319,11 +421,14 @@ export function AddMachine() {
   );
 }
 
-function AIBadge({ confidence }: { confidence: number }) {
+function AIBadge({ confidence, source = "ocr" }: { confidence: number; source?: "ocr" | "research" }) {
+  const color = source === "research" ? "text-blue-600" : "text-green-600";
+  const label = source === "research" ? "AI-uppslagning" : "AI-extraherat";
+
   return (
     <span
-      className="inline-flex items-center gap-1 text-xs text-green-600"
-      title={`AI-extraherat (${Math.round(confidence * 100)}% säkerhet)`}
+      className={`inline-flex items-center gap-1 text-xs ${color}`}
+      title={`${label} (${Math.round(confidence * 100)}% säkerhet)`}
     >
       <CheckCircle2 className="h-3 w-3" strokeWidth={1.75} />
     </span>
